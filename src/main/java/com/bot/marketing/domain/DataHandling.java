@@ -1,25 +1,25 @@
-package com.bot.marketing.service;
+package com.bot.marketing.domain;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.bot.marketing.domain.Company;
-import com.bot.marketing.domain.CompanyService;
 
 @Component
 public class DataHandling {
-	
-    @Autowired
-    private CompanyService companyService;
-	
-	public void JsonHandling(String data) {
+
+
+    
+    public void JsonHandling(String data, CompanyRepository repository) {
 		try {
 			// Parse the JSON response
+			System.out.println("Data: " + data);
 			JSONObject jsonObject = new JSONObject(data);
 			JSONArray resultsArray = jsonObject.getJSONArray("results");
+			System.out.println("Resultsarray: " + resultsArray);
 			
+			
+			System.out.println("REPOSITORION KOKO: " + repository);
 			//Going through responses results
 			for (int i = 0; i < resultsArray.length(); i++) {
 				System.out.println(i + 1);
@@ -28,9 +28,11 @@ public class DataHandling {
 				
 				//Getting business ID from results
 				String businessId = resultObject.getString("businessId");
+				System.out.println("Firman " + (i + 1) + " businessid: " + businessId );
 				
 				//Getting name from results
 				String name = resultObject.getString("name");
+				System.out.println("Friman " + (i + 1) + "Nimi: " + name);
 				
 				
 				//Setting new company and attributes for it
@@ -43,11 +45,13 @@ public class DataHandling {
 				c1.setLahetetty(false);
 				c1.setToiminnassa(false);
 				
-				companyService.addCompany(c1);
+				
+				repository.save(c1);
 			};
 		} catch(Exception e) {
 			System.out.println(e);
 		};
 	};
+	
 
 }

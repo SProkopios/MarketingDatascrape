@@ -5,16 +5,46 @@
 <title>NEW AMAZING MARKETING APP!!! WOW!!!!</title>
 </head>
 <body>
-	<h1>KUKUI KUKUI</h1>
-	<br>
-	<form th:action="@{/apicall}" action="#" method="post">
-		<input type="submit" value="API SOITTO :D:D:D"></input>
-	</form>
-	<br>
-	<h1>Company List</h1>
-	<br>
-    <form action="/printObjects" method="get">
-        <button type="submit">Print All Companies</button>
+    <h1>KUKUI KUKUI</h1>
+    <br>
+    <form th:action="@{/apicall}" action="#" method="post">
+        <input type="submit" value="API SOITTO :D:D:D"></input>
     </form>
+    <br>
+        <form th:action="@{/printCompanies}" method="get">
+        <button type="submit">Näytä firmat</button>
+    </form>
+    <br>
+    <h1>Company List</h1>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>Nimi      </th>
+                <th>Business ID      </th>
+                <th>Lähde       </th>
+                <th>Sposti         </th>
+                <th>Henkilön                nimi</th>
+                <th>Lahetetty       </th>
+                <th>Toiminnassa     </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Use Thymeleaf to iterate over companies -->
+            <tr th:if="${companies != null}" th:each="company : ${companies}">
+                <td th:text="${company.name}"></td>
+                <td th:text="${company.businessId}"></td>
+                <td th:text="${company.lahde}"></td>
+                <td th:text="${company.email}"></td>
+                <td th:text="${company.hlonimi}"></td>
+                <td th:text="${company.lahetetty}"></td>
+                <td th:text="${company.toiminnassa}"></td>
+            </tr>
+            <!-- If there are no companies -->
+            <tr th:if="${companies == null or companies.isEmpty()}">
+                <td colspan="7">No companies found</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
