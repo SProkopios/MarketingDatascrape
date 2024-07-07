@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
@@ -33,7 +34,7 @@ public class MarketingController {
 	};
 	
 	@PostMapping(value="/apicall")
-	public String apicall(Model model) {
+	public String apicall(@RequestParam("categoryText") String inputText, Model model) {
 		HttpURLConnection con = null;
 		try {
 			System.out.println("APICALL");
@@ -41,7 +42,7 @@ public class MarketingController {
 			StringBuilder result = new StringBuilder();
 			
 			//URL of the apicall
-			URL url = new URL("https://avoindata.prh.fi/bis/v1?totalResults=false&maxResults=10&resultsFrom=0&businessLine=El%C3%A4inl%C3%A4%C3%A4kint%C3%A4palvelut&companyRegistrationFrom=2014-02-28");
+			URL url = new URL("https://avoindata.prh.fi/bis/v1?totalResults=false&maxResults=10&resultsFrom=0&businessLine=" + inputText + "&companyRegistrationFrom=2014-02-28");
 			
 			//Creating a connection
 			con = (HttpURLConnection) url.openConnection();
@@ -57,7 +58,7 @@ public class MarketingController {
 					
 					// Calling datahandling
 					DataHandling dataHandling = new DataHandling();
-					dataHandling.JsonHandling(result.toString(), repository);
+					dataHandling.AvoinData(result.toString(), repository);
 	        }
 	    }
 			

@@ -1,5 +1,7 @@
 package com.bot.marketing.domain;
 
+import java.util.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -10,7 +12,7 @@ public class DataHandling {
 
 
     
-    public void JsonHandling(String data, CompanyRepository repository) {
+    public void AvoinData(String data, CompanyRepository repository) {
 		try {
 			// Parse the JSON response
 			System.out.println("Data: " + data);
@@ -35,19 +37,39 @@ public class DataHandling {
 				System.out.println("Friman " + (i + 1) + "Nimi: " + name);
 				
 				
-				//Setting new company and attributes for it
-				Company c1 = new Company();
-				c1.setName(name);
-				c1.setBusinessId(businessId);
-				c1.setLahde("Avoindata API");
-				c1.setEmail("-");
-				c1.setHlonimi("-");
-				c1.setLahetetty(false);
-				c1.setToiminnassa(false);
+				//Finding company from database using businessID
+				Optional<Company> company  = repository.findById(businessId);
 				
 				
-				repository.save(c1);
-			};
+				//If cant find the company from database
+				//This will add it
+				if (company.isEmpty()) {
+					
+				
+				
+				
+					//Setting new company and attributes for it
+					Company c1 = new Company();
+					c1.setName(name);
+					c1.setBusinessId(businessId);
+					c1.setLahde("Avoindata API");
+					c1.setEmail("-");
+					c1.setHlonimi("-");
+					c1.setLahetetty(false);
+					c1.setToiminnassa(false);
+				
+				
+					repository.save(c1);
+					
+					
+				//If company is already in database
+				//Lets Do something
+				}else {
+					System.out.println("Tää on jo olemassa fam!!!");
+				}
+				};
+				
+				
 		} catch(Exception e) {
 			System.out.println(e);
 		};
