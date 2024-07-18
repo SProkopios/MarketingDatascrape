@@ -2,13 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>NEW AMAZING MARKETING APP!!! WOW!!!!</title>
+<title>!!! MARKETING APP !!!!</title>
 </head>
 <body>
-    <h1>KUKUI KUKUI</h1>
+    <h1>Jarin vallankumouksellinen markkinointisovellus!!!</h1>
     <br>
+    <h3>Hae tästä jollain termillä firmoja*</h3>
     <form th:action="@{/apicall}" action="#" method="post">
-    	<input type="text" name="categoryText" placeholder="Enter your text here" />
+    	<input type="text" name="categoryText" placeholder="SYÖTÄ YRITYKSEN TOIMIALA" />
+    	<br>
+    	<input type=text name="area" placeholder="SYÖTÄ YRITYKSEN TOIMIPAIKKA! TARKKA!">
     	<br>
         <input type="submit" value="API SOITTO :D:D:D"></input>
     </form>
@@ -22,13 +25,15 @@
     <table>
         <thead>
             <tr>
-                <th>Nimi      </th>
-                <th>Business ID      </th>
-                <th>Lähde       </th>
-                <th>Sposti         </th>
-                <th>Henkilön                nimi</th>
-                <th>Lahetetty       </th>
-                <th>Toiminnassa     </th>
+                <th>Nimi</th>
+                <th>Y-tunnus</th>
+                <th>Lähde</th>
+                <th>Linkki</th>
+                <th>Sposti</th>
+                <th>Henkilön nimi</th>
+                <th>Lahetetty</th>
+                <th>Toiminnassa</th>
+                <th>Toimialue</th>
             </tr>
         </thead>
         <tbody>
@@ -36,11 +41,13 @@
             <tr th:if="${companies != null}" th:each="company : ${companies}">
                 <td th:text="${company.name}"></td>
                 <td th:text="${company.businessId}"></td>
-                <td th:text="${company.lahde}"></td>
+                <td th:text="${company.source}"></td>
+                <td th:text="${company.link}"></td>
                 <td th:text="${company.email}"></td>
-                <td th:text="${company.hlonimi}"></td>
-                <td th:text="${company.lahetetty}"></td>
-                <td th:text="${company.toiminnassa}"></td>
+                <td th:text="${company.personName}"></td>
+                <td th:text="${company.send}"></td>
+                <td th:text="${company.operational}"></td>
+                <td th:text="${company.area}"></td>
             </tr>
             <!-- If there are no companies -->
             <tr th:if="${companies == null or companies.isEmpty()}">

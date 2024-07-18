@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import com.bot.marketing.domain.Company;
 import com.bot.marketing.domain.CompanyRepository;
 import com.bot.marketing.domain.DataHandling;
+import com.bot.marketing.service.DataScrape;
+import com.bot.marketing.service.URLCall;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -34,19 +36,12 @@ public class MarketingController {
 	};
 	
 	@PostMapping(value="/apicall")
-	public String apicall(@RequestParam("categoryText") String inputText, Model model) {
-		HttpURLConnection con = null;
+	public String apicall(@RequestParam("categoryText") String inputText, @RequestParam("area") String area, Model model) {
 		try {
-			System.out.println("APICALL");
-			//Creating a stringbuilder
+			
+			//Creating a stringbuilder and calling avoindata from URLCall to make API call
 			StringBuilder result = new StringBuilder();
-			
-			//URL of the apicall
-			URL url = new URL("https://avoindata.prh.fi/bis/v1?totalResults=false&maxResults=10&resultsFrom=0&businessLine=" + inputText + "&companyRegistrationFrom=2014-02-28");
-			
-			//Creating a connection
-			con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
+			HttpURLConnection con = URLCall.avoindata(inputText, area);
 			
 			//Converting response from bytes to string
 			try (BufferedReader reader = new BufferedReader(
@@ -58,34 +53,29 @@ public class MarketingController {
 					
 					// Calling datahandling
 					DataHandling dataHandling = new DataHandling();
-					dataHandling.AvoinData(result.toString(), repository);
+					dataHandling.AvoinData(result.toString(), area,  repository);
 	        }
 	    }
 			
-			List<Company> companies = repository.findAll();
-			if (companies == null) {
-				System.out.println("ITS NULL FOR SOME REASON");
-			} else {
-				System.out.println(companies.size());
-				for (Company company:companies) {
-					System.out.println(company.toString());
-				}
-			}
-			} catch(Exception e) {
-				System.out.println(e);
-		} finally {
+			//DATASCRAPE KUTSUTAAN TÄSSÄ
+			//DataScrape.Scrape(repository);
+			//Closing the connection
 			con.disconnect();
+		} catch(Exception e) {
+				System.out.println(e);
 		}
-		//Closing the connection and redirecting to index
+		//Redirecting to index
+		
 		return "redirect:/";
 	}
 
 	
 	@GetMapping(value="/printCompanies")
 	public String companylist(Model model) {
+		
 		List<Company> companies = repository.findAll();
 		model.addAttribute("companies", companies);
-		System.out.println("Siinä on repositoooryt: " + repository.findAll());
+		System.out.println("Siinä on repositoooryt: " + companies);
 		return "index";
 	}
 }

@@ -15,27 +15,33 @@ public class Company {
 	private String businessId;
 	@Column(name="name")
 	private String name;
-	@Column(name="lahde")
-	private String lahde;
+	@Column(name="source")
+	private String source;
 	@Column(name="email")
 	private String email;
-	@Column(name="hlonimi")
-	private String hlonimi;
-	@Column(name="lahetetty")
-	private boolean lahetetty;
-	@Column(name="toiminnassa")
-	private boolean toiminnassa;
+	@Column(name="link")
+	private String link;
+	@Column(name="personName")
+	private String personName;
+	@Column(name="send")
+	private boolean send;
+	@Column(name="operational")
+	private boolean operational;
+	@Column(name="area")
+	private String area;
 	
-	
-	public Company(String businessId, String name, String lahde, String email, String hlonimi, boolean lahetetty, boolean toiminnassa) {
+
+	public Company(String businessId, String name, String source, String email, String link, String personName, boolean send, boolean operational, String area) {
 		super();
 		this.businessId = businessId;
 		this.name = name;
-		this.lahde = lahde;
+		this.source = source;
 		this.email = email;
-		this.hlonimi = hlonimi;
-		this.lahetetty = lahetetty;
-		this.toiminnassa = toiminnassa;
+		this.link = link;
+		this.personName = personName;
+		this.send = send;
+		this.operational = operational;
+		this.area = area;
 	}
 	
 	public Company () {};
@@ -56,12 +62,12 @@ public class Company {
 		this.name = name;
 	}
 
-	public String getLahde() {
-		return lahde;
+	public String getSource() {
+		return source;
 	}
 
-	public void setLahde(String lahde) {
-		this.lahde = lahde;
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getEmail() {
@@ -72,40 +78,59 @@ public class Company {
 		this.email = email;
 	}
 
-	public String getHlonimi() {
-		return hlonimi;
+	public String getLink() {
+		return link;
 	}
 
-	public void setHlonimi(String hlonimi) {
-		this.hlonimi = hlonimi;
+	public void setLink(String link) {
+		this.link = link;
+	}
+	
+	public String getPersonName() {
+		return personName;
 	}
 
-	public boolean isLahetetty() {
-		return lahetetty;
+	public void setPersonName(String personName) {
+		this.personName = personName;
 	}
 
-	public void setLahetetty(boolean lahetetty) {
-		this.lahetetty = lahetetty;
+	public boolean isSend() {
+		return send;
 	}
 
-	public boolean isToiminnassa() {
-		return toiminnassa;
+	public void setSend(boolean send) {
+		this.send = send;
 	}
 
-	public void setToiminnassa(boolean toiminnassa) {
-		this.toiminnassa = toiminnassa;
+	public boolean isOperational() {
+		return operational;
 	}
 
+	public void setOperational(boolean operational) {
+		this.operational = operational;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+	
+	
 	@Override
 	public String toString() {
 	    return "Company{" +
 	            "businessId='" + businessId + '\'' +
 	            ", name='" + name + '\'' +
-	            ", lahde='" + lahde + '\'' +
+	            ", source='" + source + '\'' +
 	            ", email='" + email + '\'' +
-	            ", hlonimi='" + hlonimi + '\'' +
-	            ", lahetetty=" + lahetetty +
-	            ", toiminnassa=" + toiminnassa +
+	            ", link='" + link + '\'' +
+	            ", personName='" + personName + '\'' +
+	            ", send='" + send + '\'' +
+	            ", operational='" + operational + '\'' +
+	            ", area='" + area + '\'' +
 	            '}';
 	}
 }

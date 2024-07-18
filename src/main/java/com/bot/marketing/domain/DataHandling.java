@@ -6,35 +6,34 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import com.bot.marketing.service.DataScrape;
+
 
 @Component
 public class DataHandling {
 
 
     
-    public void AvoinData(String data, CompanyRepository repository) {
+    public void AvoinData(String data, String area, CompanyRepository repository) {
 		try {
 			// Parse the JSON response
-			System.out.println("Data: " + data);
 			JSONObject jsonObject = new JSONObject(data);
 			JSONArray resultsArray = jsonObject.getJSONArray("results");
-			System.out.println("Resultsarray: " + resultsArray);
+			System.out.println("REPOSITORION KOKO: " + repository.count());
 			
 			
-			System.out.println("REPOSITORION KOKO: " + repository);
 			//Going through responses results
 			for (int i = 0; i < resultsArray.length(); i++) {
-				System.out.println(i + 1);
         	
 				JSONObject resultObject = resultsArray.getJSONObject(i);
 				
+				
 				//Getting business ID from results
 				String businessId = resultObject.getString("businessId");
-				System.out.println("Firman " + (i + 1) + " businessid: " + businessId );
+				
 				
 				//Getting name from results
 				String name = resultObject.getString("name");
-				System.out.println("Friman " + (i + 1) + "Nimi: " + name);
 				
 				
 				//Finding company from database using businessID
@@ -46,22 +45,23 @@ public class DataHandling {
 				if (company.isEmpty()) {
 					
 				
-				
-				
 					//Setting new company and attributes for it
 					Company c1 = new Company();
 					c1.setName(name);
 					c1.setBusinessId(businessId);
-					c1.setLahde("Avoindata API");
+					c1.setSource("Avoindata API");
+					c1.setLink("-");
 					c1.setEmail("-");
-					c1.setHlonimi("-");
-					c1.setLahetetty(false);
-					c1.setToiminnassa(false);
+					c1.setPersonName("-");
+					c1.setSend(false);
+					c1.setOperational(false);
+					c1.setArea(area);
 				
 				
 					repository.save(c1);
 					
 					
+					DataScrape.Scrape(c1, repository);
 				//If company is already in database
 				//Lets Do something
 				}else {
