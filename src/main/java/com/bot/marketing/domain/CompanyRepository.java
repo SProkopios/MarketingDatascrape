@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 
 
 
-@Entity
+/*@Entity
 public interface CompanyRepository extends JpaRepository<Company, String> {
 	
 	Optional<Company> findById(String businessId);
 	
 	List<Company> findAll();
-}
+}*/

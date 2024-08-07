@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.bot.marketing.service.DataScrape;
+import com.bot.marketing.service.FirestoreService;
 
 
 @Component
@@ -14,13 +15,12 @@ public class DataHandling {
 
 
     
-    public void AvoinData(String data, String area, CompanyRepository repository) {
+    public void AvoinData(String data, String area) {
 		try {
 			// Parse the JSON response
 			JSONObject jsonObject = new JSONObject(data);
 			JSONArray resultsArray = jsonObject.getJSONArray("results");
-			System.out.println("REPOSITORION KOKO: " + repository.count());
-			
+
 			
 			//Going through responses results
 			for (int i = 0; i < resultsArray.length(); i++) {
@@ -37,7 +37,7 @@ public class DataHandling {
 				
 				
 				//Finding company from database using businessID
-				Optional<Company> company  = repository.findById(businessId);
+				Optional <Company> company  = FirestoreService.getCompanyById(businessId);
 				
 				
 				//If cant find the company from database
@@ -58,10 +58,12 @@ public class DataHandling {
 					c1.setArea(area);
 				
 				
-					repository.save(c1);
+					FirestoreService.addObject(c1);
+					
+					//repository.save(c1);
 					
 					
-					DataScrape.Scrape(c1, repository);
+					DataScrape.Scrape(c1);
 				//If company is already in database
 				//Lets Do something
 				}else {

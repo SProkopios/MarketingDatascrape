@@ -3,24 +3,26 @@ package com.bot.marketing.service;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadLocalRandom;
-import java.net.URLDecoder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.bot.marketing.domain.Company;
-import com.bot.marketing.domain.CompanyRepository;
-
 
 
 @Component
 public class DataScrape {
 
 	
-	public static String Scrape(Company company, CompanyRepository repository) {
+	//couple env variables
+	private static String firstUrl = System.getenv("first.scrape.url");
+	private static String secondUrl = System.getenv("second.scrape.url");
+	
+	
+	//Scrapes data using companys information
+	//calls isValidCompany-function
+	public static void Scrape(Company company) {
 			try {
 				String word = company.getName();
 				int sleepTime = ThreadLocalRandom.current().nextInt(8000, 40001);
@@ -31,35 +33,34 @@ public class DataScrape {
 				
 				//converting companys name to url friendly form
 				String searchword = URLEncoder.encode(word, StandardCharsets.UTF_8.toString());
-				Document doc = Jsoup.connect("URL" + searchword).timeout(3000).get();
+				
+				//Datascrape
+				Document doc = Jsoup.connect(firstUrl + searchword).timeout(3000).get();
 				Elements element = doc.select("div.SearchResult__MainCol");
 				
 				
 				//Calling isValidCompany to validate data further
 				if (!element.isEmpty()) {
-					int otherSleepTime = ThreadLocalRandom.current().nextInt(2000, 10001);
-					System.out.println("SLEEPYTIME number two: " + otherSleepTime);
-					Thread.sleep(otherSleepTime);
-					isValidCompany(element, company, repository);
+					int otherSleepyTime = ThreadLocalRandom.current().nextInt(2000, 10001);
+					System.out.println("SLEEPYTIME number two: " + otherSleepyTime);
+					Thread.sleep(otherSleepyTime);
+					isValidCompany(element, company);
 				}
 				
 				} catch(Exception e) {
 					System.out.println("DataScrape: " + e);
 				}
-
-				return "index";
 		}
 	
 	
 	
-	public static void isValidCompany(Elements element, Company company, CompanyRepository repository) {
+	//Validating the data further from Scrape-function
+	//If valid, adds data to database
+	public static void isValidCompany(Elements element, Company company) {
 		String companyName = company.getName();
 		String name;
 		String link = "-";
 		String companyEmail;
-		
-		//Replace with url!!!!!!!!!
-		String baseLink = "URL";
 		
 		try {
 		
@@ -81,7 +82,7 @@ public class DataScrape {
 					
 					
 					//New datascrape from companys href to get email adress if it can be found
-					Document doc = Jsoup.connect(baseLink + link).timeout(3000).get();
+					Document doc = Jsoup.connect(secondUrl + link).timeout(3000).get();
 					Elements email  = doc.select("a.listing-email");
 					
 					
@@ -93,9 +94,10 @@ public class DataScrape {
 						
 						//Adding info to object
 						if (!companyEmail.isEmpty()) {
+							companyEmail = companyEmail.replace("mailto", "");
 							company.setEmail(companyEmail);
-							company.setLink(baseLink + link);
-							repository.save(company);
+							company.setLink(secondUrl + link);
+							FirestoreService.addObject(company);
 						}
 					}
 					//company.setLink();

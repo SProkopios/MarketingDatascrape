@@ -1,33 +1,18 @@
 package com.bot.marketing.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
 
 
-@Entity
-@Table(name = "company")
+//Entity used mainly for Firebase operations
 public class Company {
 
-	@Id
-	@Column(name="businessId")
 	private String businessId;
-	@Column(name="name")
 	private String name;
-	@Column(name="source")
 	private String source;
-	@Column(name="email")
 	private String email;
-	@Column(name="link")
 	private String link;
-	@Column(name="personName")
 	private String personName;
-	@Column(name="send")
 	private boolean send;
-	@Column(name="operational")
 	private boolean operational;
-	@Column(name="area")
 	private String area;
 	
 
