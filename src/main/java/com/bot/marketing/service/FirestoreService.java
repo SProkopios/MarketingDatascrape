@@ -27,29 +27,27 @@ public class FirestoreService {
 	
 	//Adding Company object to firebase
 	public static void addObject(Company company) {
-		Firestore db = FirebaseConfig.InitializeDatabase();
-		DocumentReference docRef = db.collection("Company").document(company.getBusinessId());
-		
-		
-		Map<String, Object> data = new HashMap<>();
-		data.put("area", company.getArea());
-		data.put("businessId", company.getBusinessId());
-		data.put("email", company.getEmail());
-		data.put("link", company.getLink());
-		data.put("name", company.getName());
-		data.put("operational", company.isOperational());
-		data.put("personName", company.getPersonName());
-		data.put("send", company.isSend());
-		data.put("source", company.getSource());
-		
-		//asynchronously write data
-		ApiFuture<WriteResult> result = docRef.set(data);
-		// ...
-		// result.get() blocks on response
 		try {
-			System.out.println("Tää on addObject: Update time : " + result.get().getUpdateTime());
-		} catch(Exception e) {
-			System.out.println("Tää on addObject: " + e);
+			Firestore db = FirebaseConfig.InitializeDatabase();
+			DocumentReference docRef = db.collection("Company").document(company.getBusinessId());
+		
+		
+			Map<String, Object> data = new HashMap<>();
+			data.put("area", company.getArea());
+			data.put("businessId", company.getBusinessId());
+			data.put("email", company.getEmail());
+			data.put("link", company.getLink());
+			data.put("name", company.getName());
+			data.put("operational", company.isOperational());
+			data.put("personName", company.getPersonName());
+			data.put("send", company.isSend());
+			data.put("source", company.getSource());
+		
+			//save the object to database
+			docRef.set(data);
+
+			} catch(Exception e) {
+				System.out.println("addObject: " + e);
 		}
 	}
 	

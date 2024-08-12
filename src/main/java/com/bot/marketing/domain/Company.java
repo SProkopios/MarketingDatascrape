@@ -1,6 +1,8 @@
 package com.bot.marketing.domain;
 
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 //Entity used mainly for Firebase operations
 public class Company {
@@ -11,12 +13,13 @@ public class Company {
 	private String email;
 	private String link;
 	private String personName;
-	private boolean send;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	private Date send;
 	private boolean operational;
 	private String area;
 	
 
-	public Company(String businessId, String name, String source, String email, String link, String personName, boolean send, boolean operational, String area) {
+	public Company(String businessId, String name, String source, String email, String link, String personName, Date send, boolean operational, String area) {
 		super();
 		this.businessId = businessId;
 		this.name = name;
@@ -79,11 +82,11 @@ public class Company {
 		this.personName = personName;
 	}
 
-	public boolean isSend() {
+	public Date isSend() {
 		return send;
 	}
 
-	public void setSend(boolean send) {
+	public void setSend(Date send) {
 		this.send = send;
 	}
 

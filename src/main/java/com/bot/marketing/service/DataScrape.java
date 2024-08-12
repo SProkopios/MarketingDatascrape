@@ -94,7 +94,7 @@ public class DataScrape {
 						
 						//Adding info to object
 						if (!companyEmail.isEmpty()) {
-							companyEmail = companyEmail.replace("mailto", "");
+							companyEmail = companyEmail.replace("mailto:", "");
 							company.setEmail(companyEmail);
 							company.setLink(secondUrl + link);
 							FirestoreService.addObject(company);
