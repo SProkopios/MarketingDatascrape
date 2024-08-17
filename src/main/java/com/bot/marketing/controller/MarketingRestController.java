@@ -22,21 +22,12 @@ import com.bot.marketing.service.URLCall;
 @Controller
 @RequestMapping("/api")
 public class MarketingRestController {
-	
-
-		
-	//Do i need this?
-	/*@GetMapping(value="/")
-	public String index() {
-		System.out.println("INDEKSI TOIMII");
-		return "index.html";
-	};*/
 		
 	
 	@PostMapping(value="/apicall")
 	public ResponseEntity<Object> apicall(@RequestParam("categoryText") String inputText, @RequestParam("area") String area, Model model) {
 		try {
-			if (!inputText.isEmpty() & !area.isEmpty()) {
+			if (!inputText.isEmpty() && !area.isEmpty()) {
 				//Creating a stringbuilder and calling avoindata from URLCall to make API call
 				StringBuilder result = new StringBuilder();
 				HttpURLConnection con = URLCall.avoindata(inputText, area);
