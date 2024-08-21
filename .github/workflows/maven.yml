@@ -24,7 +24,8 @@ jobs:
 
     env:
       user: ${{ secrets.USERNAME }}
-      password: ${{ secrets.PASSWORD }} 
+      password: ${{ secrets.PASSWORD }}
+      token: ${{ secrets.GITTOKEN }}
 
       
     runs-on: ubuntu-latest
