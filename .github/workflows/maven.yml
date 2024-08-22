@@ -17,8 +17,8 @@ permissions:
 jobs:
   build:
     env:
-      user: ${{ secrets.USERNAME }}
-      password: ${{ secrets.PASSWORD }}
+      username: ${{ secrets.LOGIN_USERNAME }}
+      password: ${{ secrets.LOGIN_PASSWORD }}
       token: ${{ secrets.GITTOKEN }}
 
       
