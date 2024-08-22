@@ -43,11 +43,11 @@ jobs:
 
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }} .
+      run: docker build -t ${{ secrets.DOCKER_REPOSITORY }}:latest .
 
 
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
+      run: docker push ${{ secrets.DOCKER_REPOSITORY }}:latest
 
 
     - name: Log out from Docker Hub
