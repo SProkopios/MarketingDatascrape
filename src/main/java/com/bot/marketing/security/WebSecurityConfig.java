@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebSecurityConfig {
 	
-	private static String username = System.getenv("user");
-	private static String password = System.getenv("password");
+	private static String username = System.getenv("LOGIN_USERNAME");
+	private static String password = System.getenv("LOGIN_PASSWORD");
 
     
     
@@ -61,8 +61,8 @@ public class WebSecurityConfig {
 	public UserDetailsService userDetailsService() {
 		UserDetails user = 
 				User.withDefaultPasswordEncoder()
-					.username("test")
-					.password("test")
+					.username(username)
+					.password(password)
 					.roles("ADMIN")
 					.build();
 		
