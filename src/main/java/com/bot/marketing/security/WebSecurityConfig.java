@@ -19,7 +19,6 @@ public class WebSecurityConfig {
 	private static String password = System.getenv("LOGIN_PASSWORD");
 
     
-    
 	//Security for api users
 	@Bean
 	public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
