@@ -9,10 +9,11 @@ import com.bot.marketing.service.URLCall;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,8 @@ public class MarketingController {
 	public String apicall(@RequestParam("categoryText") String inputText, @RequestParam("area") String area, Model model) {
 		try {
 			
+			List<Company> companies = new ArrayList<>();
+			
 			if (!inputText.isEmpty() & !area.isEmpty()) {
 			
 				//Creating a stringbuilder and calling avoindata from URLCall to make API call
@@ -50,7 +53,8 @@ public class MarketingController {
 					
 						// Calling datahandling
 						DataHandling dataHandling = new DataHandling();
-						dataHandling.AvoinData(result.toString(), area);
+						companies = dataHandling.AvoinData(result.toString(), area);
+						model.addAttribute("companies", companies);
 						
 						//Closing the connection
 					}
@@ -64,7 +68,8 @@ public class MarketingController {
 				System.out.println("Controller apicall: " + e);
 		}
 		//Redirecting to index
-		return "redirect:/";
+		
+		return "index";
 	}
 
 	
@@ -76,4 +81,41 @@ public class MarketingController {
 		return "index";
 	}
 	
+	@PostMapping("/addCompany")
+	public String addCompany(
+	        @RequestParam("name") String name,
+	        @RequestParam("businessId") String businessId,
+	        @RequestParam("source") String source,
+	        @RequestParam("link") String link,
+	        @RequestParam("email") String email,
+	        @RequestParam("personName") String personName,
+	        @RequestParam("operational") boolean operational,
+	        @RequestParam("area") String area) {
+
+		
+		try {
+			// Create a new Company object 
+			Company company = new Company();
+			List<String> cname = new ArrayList<>();
+			cname.add(name);
+			company.setName(cname);
+			Date date = new Date();
+			company.setSend(date);
+			
+			company.setBusinessId(businessId);
+			company.setSource(source);
+			company.setLink(link);
+			company.setEmail(email);
+			company.setPersonName(personName);
+			company.setOperational(operational);
+			company.setArea(area);
+			
+			// Save the Company object to the database
+			FirestoreService.addObject(company);
+		} catch (Exception e) {
+			System.out.println("addCompany: " + e);
+		}
+	    
+	    return "redirect:/";
+	}
 }

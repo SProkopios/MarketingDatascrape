@@ -19,17 +19,18 @@ public class URLCall {
 				StringBuilder result = new StringBuilder();
 				
 				//URL of the apicall
-				URL url = new URL("https://avoindata.prh.fi/bis/v1?totalResults=false&maxResults=5&resultsFrom=0&businessLine=" + inputText + "&companyRegistrationFrom=2014-02-28&registeredOffice=" + area);
+				URL url = new URL("https://avoindata.prh.fi/opendata-ytj-api/v3/companies?location=" + area + "&mainBusinessLine=" + inputText);
 		
 				//Creating a connection
 				con = (HttpURLConnection) url.openConnection();
 				con.setRequestMethod("GET");
 			
+				System.out.println("URL CALL: " + con.toString());
 				//Checking response code
 				int responseCode = con.getResponseCode();
 				
 				if (responseCode == HttpURLConnection.HTTP_OK) {
-					
+					System.out.println(responseCode);
 				} else {
 					System.out.println("Response from URLCALL: " + responseCode);
 				}

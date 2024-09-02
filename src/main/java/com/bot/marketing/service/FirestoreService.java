@@ -47,7 +47,7 @@ public class FirestoreService {
 			docRef.set(data);
 
 			} catch(Exception e) {
-				System.out.println("addObject: " + e);
+				System.out.println("FirestoreService.addObject: " + e);
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class FirestoreService {
 		        companies.add(company);
 		    }
 		} catch (Exception e) {
-			System.out.println("getAll: " + e);
+			System.out.println("FirestoreService.getAll: " + e);
 		}
 		return companies;
 	}

@@ -1,6 +1,7 @@
 package com.bot.marketing.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class Company {
 
 	private String businessId;
-	private String name;
+	private List<String> name;
 	private String source;
 	private String email;
 	private String link;
@@ -19,7 +20,7 @@ public class Company {
 	private String area;
 	
 
-	public Company(String businessId, String name, String source, String email, String link, String personName, Date send, boolean operational, String area) {
+	public Company(String businessId, List<String> name, String source, String email, String link, String personName, Date send, boolean operational, String area) {
 		super();
 		this.businessId = businessId;
 		this.name = name;
@@ -42,11 +43,11 @@ public class Company {
 		this.businessId = businessId;
 	}
 
-	public String getName() {
+	public List<String> getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(List<String> name) {
 		this.name = name;
 	}
 

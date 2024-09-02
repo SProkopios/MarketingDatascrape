@@ -32,7 +32,7 @@ public class WebSecurityConfig {
 			.addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 			.csrf().disable();
 		
-		
+
 		return http.build();
 	}
 	

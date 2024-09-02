@@ -1,7 +1,9 @@
 package com.bot.marketing.domain;
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,29 +15,38 @@ import com.bot.marketing.service.FirestoreService;
 @Component
 public class DataHandling {
 
-	
+	List<Company> companies = new ArrayList<>();
     
-    public void AvoinData(String data, String area) {
+	
+    public List<Company> AvoinData(String data, String area) {
 		try {
 			// Parse the JSON response
 			JSONObject jsonObject = new JSONObject(data);
-			JSONArray resultsArray = jsonObject.getJSONArray("results");
+			JSONArray resultsArray = jsonObject.getJSONArray("companies");
 
 			
 			//Going through responses results
 			for (int i = 0; i < resultsArray.length(); i++) {
         	
+				List<String> companyNames = new ArrayList<>();
+				
 				JSONObject resultObject = resultsArray.getJSONObject(i);
+				
+				System.out.println("result object: " + resultObject);
 				
 				
 				//Getting business ID from results
-				String businessId = resultObject.getString("businessId");
+				JSONObject businessIdObj = resultObject.getJSONObject("businessId");
+				String businessId = businessIdObj.getString("value");
 				
-				
-				//Getting name from results
-				String name = resultObject.getString("name");
-				
-				
+
+				JSONArray nameObject = resultObject.getJSONArray("names");
+				for (int y = 0; y < nameObject.length(); y++) {
+					JSONObject names = nameObject.getJSONObject(y);
+					String name = names.getString("name");
+					companyNames.add(name); 
+				}
+
 				//Finding company from database using businessID
 				Optional <Company> company  = FirestoreService.getCompanyById(businessId);
 				
@@ -43,36 +54,39 @@ public class DataHandling {
 				//If cant find the company from database
 				//This will add it
 				if (company.isEmpty()) {
-					
-					Date date = new Date();
 
 				
 					//Setting new company and attributes for it
 					Company c1 = new Company();
-					System.out.println(c1);
-					c1.setName(name);
 					c1.setBusinessId(businessId);
+					
 					c1.setSource("Avoindata API");
 					c1.setLink(null);
 					c1.setEmail(null);
+					
 					c1.setPersonName(null);
-					c1.setSend(date);
-					System.out.println(c1.isSend());
+					c1.setSend(null);
+					
 					c1.setOperational(true);
 					c1.setArea(area);
-	
-					FirestoreService.addObject(c1);
+					
+					c1.setName(companyNames);
+					
+					c1 = DataScrape.Scrape(c1);
 					
 					
-					DataScrape.Scrape(c1);
+					companies.add(c1);
+					
+					
 				//If company is already in database
 				//Lets Do something
 				}else {
-					System.out.println("Tää on jo olemassa fam!!!");
+					companies.add(company.get());
 					}
 				};
 		} catch(Exception e) {
-			System.out.println(e);
+			System.out.println("Avoindata: " + e);
 		};
+		return companies;
 	};
 };

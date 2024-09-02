@@ -47,9 +47,9 @@ public class FirebaseConfig {
 			// You can now obtain Firestore instance as needed
 			db = FirestoreClient.getFirestore();
 		} catch (IOException e) {
+			System.out.println("Error in firebaseCOnfig: ");
 			e.printStackTrace();
 		}
-		System.out.println("Tää on Config db: " + db);
 		return db;
 	}
 }
