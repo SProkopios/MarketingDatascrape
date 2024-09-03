@@ -29,6 +29,7 @@ public class FirestoreService {
 	public static void addObject(Company company) {
 		try {
 			Firestore db = FirebaseConfig.InitializeDatabase();
+			System.out.println("Database: " + db);
 			DocumentReference docRef = db.collection("Company").document(company.getBusinessId());
 		
 		
