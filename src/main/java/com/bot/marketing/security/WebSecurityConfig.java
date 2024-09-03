@@ -15,10 +15,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebSecurityConfig {
 	
-	private static String username = System.getenv("LOGIN_USERNAME");
-	private static String password = System.getenv("LOGIN_PASSWORD");
+	private static String username = System.getenv("username");
+	private static String password = System.getenv("password");
 
-    
     
 	//Security for api users
 	@Bean
