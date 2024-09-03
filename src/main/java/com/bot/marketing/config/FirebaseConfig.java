@@ -50,6 +50,7 @@ public class FirebaseConfig {
 			System.out.println("Error in firebaseCOnfig: ");
 			e.printStackTrace();
 		}
+		System.out.println("This is db: " + db);
 		return db;
 	}
 }
