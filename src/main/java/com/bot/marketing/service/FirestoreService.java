@@ -47,8 +47,6 @@ public class FirestoreService {
 			docRef.set(data);
 
 			} catch(Exception e) {
-				System.out.println("Database: " + db);
-				System.out.println("docRef: " + docRef);
 				System.out.println("FirestoreService.addObject: " + e);
 		}
 	}
