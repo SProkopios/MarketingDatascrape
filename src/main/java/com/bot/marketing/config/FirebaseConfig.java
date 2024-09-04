@@ -28,7 +28,11 @@ public class FirebaseConfig {
 	
 	//As the name suggests, initializing the database
 	public static Firestore InitializeDatabase(){
-		
+		try {
+            		credentials = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebase.credentials.path.json")));
+        	} catch (Exception e) {
+            		System.err.println("Failed to load Firebase credentials: " + e.getMessage());
+        	}
 		
 		//If it has been initialized once, just returning the current one
 		if (db != null) {
