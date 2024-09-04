@@ -36,14 +36,9 @@ public class FirebaseConfig {
 		}
 		
 		
-		try {
-    		path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebaseConfig.json")));
-		} catch (Exception e) {
-    		System.err.println("Failed to load Firebase credentials: " + e.getMessage());
-		}
-		
 		//If not, initialize it here
 		try {
+			path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebaseConfig.json")));
 			FileInputStream serviceAccount = new FileInputStream(path);
 			GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
@@ -57,6 +52,7 @@ public class FirebaseConfig {
 		} catch (IOException e) {
 			System.out.println("Error in firebaseCOnfig: ");
 			e.printStackTrace();
+			System.out.println("PATH: " + path);
 		}
 		System.out.println("This is db: " + db);
 		return db;
