@@ -2,6 +2,8 @@ package com.bot.marketing.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,30 +20,31 @@ import com.google.firebase.cloud.FirestoreClient;
 public class FirebaseConfig {
 
 	
-	//env variable
-	private static String credentials = System.getenv("etc/secrets/firebase.credentials.path.json");
-
-	
 	//Database
 	private static Firestore db;
 	
+	private static String path;
 	
 	//As the name suggests, initializing the database
 	public static Firestore InitializeDatabase(){
-		try {
-            		credentials = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebase.credentials.path.json")));
-        	} catch (Exception e) {
-            		System.err.println("Failed to load Firebase credentials: " + e.getMessage());
-        	}
+
 		
+
 		//If it has been initialized once, just returning the current one
 		if (db != null) {
 			return db;
 		}
 		
+		
+		try {
+    		path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebase.credentials.path.json")));
+		} catch (Exception e) {
+    		System.err.println("Failed to load Firebase credentials: " + e.getMessage());
+		}
+		
 		//If not, initialize it here
 		try {
-			FileInputStream serviceAccount = new FileInputStream(credentials);
+			FileInputStream serviceAccount = new FileInputStream(path);
 			GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
 			FirebaseOptions options = new FirebaseOptions.Builder()
