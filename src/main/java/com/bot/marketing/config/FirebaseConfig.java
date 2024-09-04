@@ -37,7 +37,7 @@ public class FirebaseConfig {
 		
 		
 		try {
-    		path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebase.credentials.path.json")));
+    		path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebaseConfig.json")));
 		} catch (Exception e) {
     		System.err.println("Failed to load Firebase credentials: " + e.getMessage());
 		}
