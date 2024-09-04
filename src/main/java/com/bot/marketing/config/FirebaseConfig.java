@@ -19,7 +19,7 @@ public class FirebaseConfig {
 
 	
 	//env variable
-	private static String credentials = System.getenv("/etc/secrets/firebase.credentials.path.json");
+	private static String credentials = System.getenv("etc/secrets/firebase.credentials.path.json");
 
 	
 	//Database
