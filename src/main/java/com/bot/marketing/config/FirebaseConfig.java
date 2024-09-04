@@ -38,7 +38,7 @@ public class FirebaseConfig {
 		
 		//If not, initialize it here
 		try {
-			path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebaseConfig.json")));
+			path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebaseConfig")));
 			FileInputStream serviceAccount = new FileInputStream(path);
 			GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
