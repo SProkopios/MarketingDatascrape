@@ -16,6 +16,7 @@ import com.google.firebase.cloud.FirestoreClient;
 
 @Configuration
 public class FirebaseConfig {
+
 	
 	//env variable
 	private static String credentials = System.getenv("/etc/secrets/firebase.credentials.path.json");
