@@ -3,6 +3,7 @@ package com.bot.marketing.config;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.core.env.Environment;
@@ -23,7 +24,7 @@ public class FirebaseConfig {
 	//Database
 	private static Firestore db;
 	
-	private static String path;
+	private static String path = System.getenv("Firebase");
 	
 	//As the name suggests, initializing the database
 	public static Firestore InitializeDatabase(){
@@ -38,7 +39,6 @@ public class FirebaseConfig {
 		
 		//If not, initialize it here
 		try {
-			path = new String(Files.readAllBytes(Paths.get("/etc/secrets/firebaseConfig")));
 			FileInputStream serviceAccount = new FileInputStream(path);
 			GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
