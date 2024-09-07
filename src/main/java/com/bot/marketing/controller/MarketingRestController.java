@@ -110,7 +110,10 @@ public class MarketingRestController {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/api/**").allowedOrigins(address);
+				System.out.println(address);
+				registry.addMapping("/api/**")
+				.allowedOrigins(address)
+				.allowedHeaders("X-API-KEY", "Content-Type");
 			}
 		};
 	}
