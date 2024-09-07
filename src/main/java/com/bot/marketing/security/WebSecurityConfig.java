@@ -33,8 +33,8 @@ public class WebSecurityConfig {
 					.anyRequest().authenticated()
 						)
 				.addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-				.csrf().disable()
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+				.csrf().disable();
+			
 		} catch (Exception e) {
 			System.out.println("SecurityFilterChain: " + e);
 		}
@@ -73,19 +73,5 @@ public class WebSecurityConfig {
 		
 		return new InMemoryUserDetailsManager(user);
 		
-	}
-	
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedOrigin(address); // Allow frontend origin
-		configuration.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
-		configuration.addAllowedHeader("*"); // Allow all headers
-		configuration.setAllowCredentials(true); // If credentials like cookies are needed
-
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/api/**", configuration); // Apply CORS settings to all endpoints
-
-		return source;
 	}
 }
