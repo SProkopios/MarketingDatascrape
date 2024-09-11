@@ -4,11 +4,11 @@ This project is for research and practising purposes! Idea is to create program 
 
 ## Technologies
 
-Java
-Spring boot
-Docker
-Github actions for CI/CD
-Firebase
+* Java
+* Spring boot
+* Docker
+* Github actions for CI/CD
+* Firebase
 
 ## Usage
 
