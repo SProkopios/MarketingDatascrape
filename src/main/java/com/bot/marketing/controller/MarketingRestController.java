@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,6 +25,7 @@ import com.bot.marketing.domain.Company;
 import com.bot.marketing.domain.DataHandling;
 import com.bot.marketing.service.FirestoreService;
 import com.bot.marketing.service.URLCall;
+import com.bot.marketing.domain.CompanySearchRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -34,13 +34,24 @@ public class MarketingRestController {
 	String address = System.getenv("address");
 	
 	
+	//Because free version of Render
+	@GetMapping(value="/wakeServer")
+	public ResponseEntity<Object> wakeServer() {
+		return ResponseEntity.ok("We are live");
+	}
+	
+	
 	@PostMapping(value="/apicall")
-	public ResponseEntity<Object> apicall(@RequestParam("categoryText") String inputText, @RequestParam("area") String area, Model model) {
+	public ResponseEntity<Object> apicall(@RequestBody CompanySearchRequest body) {
 		
 		List<Company> companies = new ArrayList<>();
 		
+		String inputText = body.getCategoryText();
+		String area = body.getArea();
+		
+		
 		try {
-			
+		
 			if (!inputText.isEmpty() && !area.isEmpty()) {
 			//Creating a stringbuilder and calling avoindata from URLCall to make API call
 			StringBuilder result = new StringBuilder();
@@ -54,7 +65,7 @@ public class MarketingRestController {
 					// Loop to read every line 
 					for (String line; (line = reader.readLine()) != null; ) {
 						result.append(line);
-						System.out.println(line);
+						
 						
 						// Calling datahandling
 						DataHandling dataHandling = new DataHandling();
@@ -110,7 +121,6 @@ public class MarketingRestController {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				System.out.println(address);
 				registry.addMapping("/api/**")
 				.allowedOrigins(address)
 				.allowedHeaders("X-API-KEY", "Content-Type");

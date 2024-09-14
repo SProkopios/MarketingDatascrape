@@ -32,8 +32,6 @@ public class DataHandling {
 				
 				JSONObject resultObject = resultsArray.getJSONObject(i);
 				
-				System.out.println("result object: " + resultObject);
-				
 				
 				//Getting business ID from results
 				JSONObject businessIdObj = resultObject.getJSONObject("businessId");

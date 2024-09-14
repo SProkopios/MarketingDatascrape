@@ -27,7 +27,7 @@ public class MarketingController {
 	
 	@GetMapping(value="/")
 	public String index() {
-		System.out.println("INDEKSI TOIMII");
+		System.out.println("Index works");
 		return "index.html";
 	};
 	
@@ -61,7 +61,7 @@ public class MarketingController {
 					con.disconnect();
 				}
 			} else {
-				System.out.println("Parametri puuttuu");
+				System.out.println("Missing parameter");
 			}
 			
 		} catch(Exception e) {

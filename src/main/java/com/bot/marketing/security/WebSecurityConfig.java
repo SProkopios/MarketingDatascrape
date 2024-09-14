@@ -20,8 +20,7 @@ public class WebSecurityConfig {
 	
 	private static String username = System.getenv("username");
 	private static String password = System.getenv("password");
-	private static String address = System.getenv("address");
-
+	
     
 	//Security for api users
 	@Bean

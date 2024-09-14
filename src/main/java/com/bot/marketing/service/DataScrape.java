@@ -20,40 +20,63 @@ public class DataScrape {
 	//couple env variables
 	private static String firstUrl = System.getenv("first.scrape.url");
 	private static String secondUrl = System.getenv("second.scrape.url");
+	private static String firstElement = System.getenv("firstScrapeElement");
+	private static String nameElement = System.getenv("IVCNameElement");
+	private static String linkElement = System.getenv("IVCLinkElement");
+			
 	
 	
 	//Scrapes data using companys information
 	//calls isValidCompany-function
 	public static Company Scrape(Company company) {
 			try {
+				
+				// At this point, company-object may have multiple names
 				List<String> companyNames = company.getName();
+				
+				//Using the first name
 				String word = companyNames.get(0);
+				
+				
+				//Stopping the code for a while
 				int sleepTime = ThreadLocalRandom.current().nextInt(3000, 10001);
-				System.out.println("SLEEPYTIME: " + sleepTime);
 				Thread.sleep(sleepTime);
 				
 				
 				//converting companys name to url friendly form
 				String searchword = URLEncoder.encode(word, StandardCharsets.UTF_8.toString());
 				
-				//Datascrape
+				
+				//Getting the HTML file
 				Document doc = Jsoup.connect(firstUrl + searchword).timeout(3000).get();
-				Elements element = doc.select("div.SearchResult__MainCol");
-				//System.out.println("ELEMENT IN SCRAPE: " + element);
-				String id = element.select("div.text-muted").get(1).text();
+				
+				//Searching for wanted element
+				Elements element = doc.select(firstElement);
 				
 				
-				//Checking if element isnt empty and id matches companys id
-				//Calling isValidCompany to validate data further
-				if (!element.isEmpty() && id.equals(company.getBusinessId())) {
+				// If wanted element is found, searching more specific element
+				if (!element.isEmpty()) {
+					String id = element.select("div.text-muted").get(0).text();
 					
-					//You have scrolled a lot, lets rest for 2-8 seconds
-					int otherSleepyTime = ThreadLocalRandom.current().nextInt(2000, 8001);
-					//System.out.println("SLEEPYTIME number two: " + otherSleepyTime);
-					Thread.sleep(otherSleepyTime);
+				
+					//Checking if element isnt empty and id matches companys id
+					//Calling isValidCompany to validate data further
+					if (id.equals(company.getBusinessId())) {
+							
+						
+						//You have scrolled a lot, lets rest for 2-8 seconds
+						int otherSleepyTime = ThreadLocalRandom.current().nextInt(2000, 8001);
 					
-					//Now lets call the isValidCompany
-					company = isValidCompany(element, company);
+						
+						//System.out.println("SLEEPYTIME number two: " + otherSleepyTime);
+						Thread.sleep(otherSleepyTime);
+					
+						
+						//Now lets call the isValidCompany
+						company = isValidCompany(element, company);
+					}
+				} else {
+					System.out.println("No element found in Scrape!");
 				}
 				
 				} catch(Exception e) {
@@ -68,7 +91,6 @@ public class DataScrape {
 	//Validating the data further from Scrape-function
 	//If valid, adds data to database
 	public static Company isValidCompany(Elements element, Company company) {
-		List<String> companyName = company.getName();
 		String name;
 		String link = "-";
 		String companyEmail;
@@ -79,19 +101,12 @@ public class DataScrape {
 			for (Element e : element) {
 			
 				//Selecting name and link from elements
-				System.out.println("");
-				System.out.println("is Valid Company -- Element: " + e);
-				Elements nameElements = e.select("div.SearchResult__Name");
-				Elements linkElements = e.select("a.SearchResult__ProfileLink");
-				System.out.println("LINK ELEMENTTI: " + linkElements);
+				Elements nameElements = e.select(nameElement);
+				Elements linkElements = e.select(linkElement);
+				
+				//Extracting elements
 				link = linkElements.first().attr("href");
 				name = nameElements.first().text();
-				System.out.println("name elementti linkki elementin sisällä: " + name + " JA tässä on companyname, joten matchaakone: " + companyName);
-				System.out.println("");
-				
-				
-				//calling getCorrectName-function to verify the name in company-class
-				getCorrectName(name, company);
 				
 			
 				//Checking if there is a company name in element and its correct one
@@ -99,17 +114,20 @@ public class DataScrape {
 				if (!name.isEmpty()) {
 					
 					
+					//calling getCorrectName-function to verify the name in company-class
+					getCorrectName(name, company);
+					
+					
 					//New datascrape from companys href to get email adress if it can be found
 					Document doc = Jsoup.connect(secondUrl + link).timeout(5000).get();
 					Elements email  = doc.select("a.listing-email");
-					System.out.println("TÄÄLHÄ MYÖ OLLAA ELI EMAILIA ON LÖYDETTÄVÄ :D:D:D");
+					
 					
 					//Checking if there is email present 
 					//Cheking if there is actually anything in it
 					if (!email.isEmpty()) {
-						System.out.println("Email on löydetty");
+						
 						companyEmail = email.first().attr("href");
-						System.out.println("ja se on tämä: " + companyEmail);
 						
 						
 						//Adding info to object
@@ -119,7 +137,6 @@ public class DataScrape {
 							
 							link = URLDecoder.decode(link, StandardCharsets.UTF_8.name());
 							link = link.replace(" ", "+");
-							System.out.println("decodedURL: " + link);
 							company.setLink(secondUrl + link);
 							
 						}
