@@ -28,7 +28,7 @@ public class FirestoreService {
 	//Adding Company object to firebase
 	public static void addObject(Company company) {
 		try {
-			System.out.println("Company id: ", company.getbusinessId());
+			System.out.println("Company id: ", company.getBusinessId());
 			Firestore db = FirebaseConfig.InitializeDatabase();
 			DocumentReference docRef = db.collection("Company").document(company.getBusinessId());
 		
