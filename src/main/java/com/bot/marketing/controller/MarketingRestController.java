@@ -102,9 +102,9 @@ public class MarketingRestController {
 		
 	@PostMapping(value="/addCompany", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<String> addCompany(@RequestBody Company company) {
-
 		
 		try {
+			System.out.println("Company Restapi: " + company.getBusinessId());
 			// Save the Company object to the database
 			FirestoreService.addObject(company);
 			return ResponseEntity.ok("Company added");
