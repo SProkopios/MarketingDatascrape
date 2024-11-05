@@ -10,9 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 
 @EnableWebSecurity
 @Configuration
@@ -22,6 +20,20 @@ public class WebSecurityConfig {
 	private static String password = System.getenv("password");
 	
     
+	// Endpoint for login that doesnt require any apikeys or tokens
+	@Bean
+	public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
+	    http
+	        .securityMatcher("/api/checkinguser")
+	        .authorizeHttpRequests((requests) -> requests
+	            .anyRequest().permitAll()
+	        )
+	        .csrf().disable();
+
+	    return http.build();
+	}
+	
+	
 	//Security for api users
 	@Bean
 	public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {

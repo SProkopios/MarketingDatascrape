@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,8 @@ import com.bot.marketing.domain.DataHandling;
 import com.bot.marketing.service.FirestoreService;
 import com.bot.marketing.service.URLCall;
 import com.bot.marketing.domain.CompanySearchRequest;
+import com.bot.marketing.domain.User;
+import com.bot.marketing.security.JWTokenService;
 
 @RestController
 @RequestMapping("/api")
@@ -115,6 +118,26 @@ public class MarketingRestController {
 	}
 	
 	
+	// Checking frontend credentials
+	@PostMapping(value="/checkinguser")
+	public ResponseEntity<HashMap<String,Object>> checkUser(@RequestBody User user) {
+		
+		HashMap<String, Object> response = new HashMap<>();
+		
+		if(FirestoreService.verifyUser(user)) {
+	        response.put("success", true);
+	        response.put("message", "Login successful");
+	        response.put("token", JWTokenService.createToken());
+			return ResponseEntity.ok(response);
+		} else {
+			//
+	        response.put("success", false);
+	        response.put("message", "Login failed");
+			return ResponseEntity.ok(response);
+		}
+	}
+	
+	
 	// Very simple way to handling CORS
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
@@ -123,7 +146,7 @@ public class MarketingRestController {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/api/**")
 				.allowedOrigins(address)
-				.allowedHeaders("X-API-KEY", "Content-Type");
+				.allowedHeaders("X-API-KEY", "Content-Type", "Authorization");
 			}
 		};
 	}

@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.bot.marketing.config.FirebaseConfig;
 import com.bot.marketing.domain.Company;
+import com.bot.marketing.domain.User;
+import com.fasterxml.jackson.databind.ser.std.UUIDSerializer;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
@@ -109,5 +112,44 @@ public class FirestoreService {
 		}
 		return optionalCompany;
 	}
+	
+	
+	//Verifying username and password
+	public static Boolean verifyUser(User user) {
+		
+		
+		//making a query to database
+		Firestore db = FirebaseConfig.InitializeDatabase();
+		CollectionReference User = db.collection("User");
+		Query query = User.whereEqualTo("username", user.getUsername());
+		
+		// Asynchronously retrieve multiple documents
+		ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+		
+		// Get the list of documents returned by the query
+		try {
+			
+			QuerySnapshot snapshot = querySnapshot.get();
+		
+			if (! snapshot.isEmpty()) {
+				
+				DocumentSnapshot document = snapshot.getDocuments().get(0);
+
+				//Getting the fields from database
+				String dbPassword = document.getString("password");
+
+				
+				if(dbPassword.equals(user.getUsername())) {
+					return true;
+				}
+		}
+		}catch(Exception e) {
+			System.out.println("verifyUser: " + e);
+		}
+		return false;
+		
+	}
+
 
 }
