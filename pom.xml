@@ -48,9 +48,9 @@
         		<version>2.2</version>
     		</dependency>
 		<dependency>
-        		<groupId>org.hibernate</groupId>
+        		<groupId>org.hibernate.orm</groupId>
         		<artifactId>hibernate-core</artifactId>
-        		<version>6.2.2.Final</version>
+        		<version>6.6.1.Final</version>
     		</dependency>
     		<dependency>
     			<groupId>org.hibernate</groupId>
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<version>6.3.4</version>
+			<version>3.3.5</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -71,7 +71,7 @@
 		<dependency>
     			<groupId>jakarta.servlet</groupId>
     			<artifactId>jakarta.servlet-api</artifactId>
-    			<version>6.1.0-M2</version>
+    			<version>6.1.0</version>
 		</dependency>
 		<dependency>
     			<groupId>org.json</groupId>
