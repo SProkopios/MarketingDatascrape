@@ -120,7 +120,7 @@ public class FirestoreService {
 		
 		//making a query to database
 		Firestore db = FirebaseConfig.InitializeDatabase();
-		CollectionReference User = db.collection("User");
+		CollectionReference User = db.collection("Users");
 		Query query = User.whereEqualTo("username", user.getUsername());
 		
 		// Asynchronously retrieve multiple documents
