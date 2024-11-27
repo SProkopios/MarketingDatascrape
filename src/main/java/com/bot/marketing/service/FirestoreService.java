@@ -140,7 +140,7 @@ public class FirestoreService {
 				String dbPassword = document.getString("password");
 
 				
-				if(dbPassword.equals(user.getUsername())) {
+				if(dbPassword.equals(user.getPassword())) {
 					return true;
 				}
 		}
