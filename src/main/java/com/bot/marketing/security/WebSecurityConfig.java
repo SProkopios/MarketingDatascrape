@@ -24,7 +24,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
 	    http
-	        .securityMatcher("/api/checkinguser")
+	        .securityMatcher("/api/checkinguser", "/api/wakeServer")
 	        .authorizeHttpRequests((requests) -> requests
 	            .anyRequest().permitAll()
 	        )
