@@ -40,7 +40,9 @@ public class MarketingRestController {
 	//Because free version of Render
 	@GetMapping(value="/wakeServer")
 	public ResponseEntity<Object> wakeServer() {
-		return ResponseEntity.ok("We are live");
+		Map<String, String> response = new HashMap<>();
+		response.put("Message","We are live");
+		return ResponseEntity.ok(response);
 	}
 	
 	
