@@ -163,6 +163,7 @@ public class DataScrape {
 			if (c.equals(Name)) {
 				companyNames.clear();
 				companyNames.add(Name);
+				company.setName(companyNames);
 				break;
 			}
 		}
