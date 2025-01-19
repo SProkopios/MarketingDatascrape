@@ -115,7 +115,7 @@ public class DataScrape {
 					
 					
 					//calling getCorrectName-function to verify the name in company-class
-					getCorrectName(name, company);
+					company = getCorrectName(name, company);
 					
 					
 					//New datascrape from companys href to get email adress if it can be found
@@ -157,16 +157,17 @@ public class DataScrape {
 	
 	
 	//Verify what name of the company is the correct one
-	public static void getCorrectName(String Name, Company company) {
+	public static Company getCorrectName(String Name, Company company) {
 		List<String> companyNames = company.getName();
 		for (String c : companyNames) {
 			if (c.equals(Name)) {
 				companyNames.clear();
 				companyNames.add(Name);
 				company.setName(companyNames);
-				break;
+				return company;
 			}
 		}
+		return company;
 		
 	}
 }
