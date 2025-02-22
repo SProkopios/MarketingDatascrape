@@ -17,7 +17,6 @@ public class DataHandling {
 
 	List<Company> companies = new ArrayList<>();
     
-	
     public List<Company> AvoinData(String data, String area) {
 		try {
 			// Parse the JSON response
@@ -29,58 +28,58 @@ public class DataHandling {
 			for (int i = 0; i < resultsArray.length(); i++) {
         	
 				List<String> companyNames = new ArrayList<>();
-				
 				JSONObject resultObject = resultsArray.getJSONObject(i);
-				
-				
-				//Getting business ID from results
 				JSONObject businessIdObj = resultObject.getJSONObject("businessId");
-				String businessId = businessIdObj.getString("value");
-				
-
+				String businessId = businessIdObj.getString("value");				
+				String businessStatus =resultObject.getString("status");
 				JSONArray nameObject = resultObject.getJSONArray("names");
-				for (int y = 0; y < nameObject.length(); y++) {
-					JSONObject names = nameObject.getJSONObject(y);
-					String name = names.getString("name");
-					companyNames.add(name); 
-				}
-
-				//Finding company from database using businessID
-				Optional <Company> company  = FirestoreService.getCompanyById(businessId);
 				
-				
-				//If cant find the company from database
-				//This will add it
-				if (company.isEmpty()) {
-
-				
-					//Setting new company and attributes for it
-					Company c1 = new Company();
-					c1.setBusinessId(businessId);
-					
-					c1.setSource("Avoindata API");
-					c1.setLink(null);
-					c1.setEmail(null);
-					
-					c1.setPersonName(null);
-					c1.setSend(null);
-					
-					c1.setOperational(true);
-					c1.setArea(area);
-					
-					c1.setName(companyNames);
-					
-					c1 = DataScrape.Scrape(c1);
-					
-					
-					companies.add(c1);
-					
-					
-				//If company is already in database
-				//Lets Do something
-				}else {
-					companies.add(company.get());
+				if (businessStatus.equals("2")) {
+					for (int y = 0; y < nameObject.length(); y++) {
+						JSONObject names = nameObject.getJSONObject(y);
+						String name = names.getString("name");  
+						companyNames.add(name); 
 					}
+	
+					//Finding company from database using businessID
+					Optional <Company> company  = FirestoreService.getCompanyById(businessId);
+					
+					
+					//If cant find the company from database
+					//This will add it
+					if (company.isEmpty()) {
+	
+					
+						//Setting new company and attributes for it
+						Company c1 = new Company();
+						c1.setBusinessId(businessId);
+						
+						c1.setSource("Avoindata API");
+						c1.setLink("");
+						c1.setEmail("");
+						
+						c1.setPersonName("");
+						c1.setSend(null);
+						
+						c1.setOperational(true);
+						c1.setArea(area);
+						
+						c1.setName(companyNames);
+						
+						c1 = DataScrape.Scrape(c1);
+						
+						
+						companies.add(c1);
+						
+						
+					//If company is already in database
+					//Lets Do something
+					}else {
+						companies.add(company.get());
+						}
+				} else {
+					
+				}
 				};
 		} catch(Exception e) {
 			System.out.println("Avoindata: " + e);

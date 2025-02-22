@@ -56,12 +56,10 @@ public class MarketingRestController {
 		
 		
 		try {
-		
 			if (!inputText.isEmpty() && !area.isEmpty()) {
 			//Creating a stringbuilder and calling avoindata from URLCall to make API call
 			StringBuilder result = new StringBuilder();
 			HttpURLConnection con = URLCall.avoindata(inputText, area);
-			
 			
 				//Converting response from bytes to string
 				try (BufferedReader reader = new BufferedReader(
