@@ -53,7 +53,6 @@ public class DataScrape {
 						.followRedirects(true)
 						.get();
 				
-				
 				if(doc.childNodes().size() == 2) {
 					
 					company.setSource(company.getSource() + ", " + dataSource);
@@ -99,7 +98,7 @@ public class DataScrape {
 					String companyId = e.get(idElement).asText();
 					companyId = refactorString(companyId);
 					String nameElementti = e.get(nameElement).asText();
-					getCorrectName(nameElementti, company);
+					company = getCorrectName(nameElementti, company);
 
 					if (companyId.equals(company.getBusinessId())) {
 						
@@ -124,7 +123,7 @@ public class DataScrape {
 	
 	
 	//Verify what name of the company is the correct one
-	public static void getCorrectName(String Name, Company company) {
+	public static Company getCorrectName(String Name, Company company) {
 		List<String> companyNames = company.getName();
 		for (String c : companyNames) {
 			if (c.equals(Name)) {
@@ -134,6 +133,7 @@ public class DataScrape {
 				break;
 			}
 		}
+		return company;
 	}
 	
 	

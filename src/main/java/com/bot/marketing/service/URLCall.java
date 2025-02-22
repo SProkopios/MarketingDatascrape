@@ -25,7 +25,6 @@ public class URLCall {
 				con = (HttpURLConnection) url.openConnection();
 				con.setRequestMethod("GET");
 			
-				System.out.println("URL CALL: " + con.toString());
 				//Checking response code
 				int responseCode = con.getResponseCode();
 				
