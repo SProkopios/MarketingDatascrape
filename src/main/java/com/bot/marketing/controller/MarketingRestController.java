@@ -115,7 +115,6 @@ public class MarketingRestController {
 			FirestoreService.addObject(company, collection);
 			return ResponseEntity.ok("Company added");
 		} catch (Exception e) {
-			System.out.println("addCompany: " + e);
 			return ResponseEntity.internalServerError().body("Error in restcontroller in adding company");
 		}
 	}
@@ -127,10 +126,8 @@ public class MarketingRestController {
 			String collection  = "Mylist";
 			// Save the Company object to the database
 			FirestoreService.addObject(company, collection);
-			System.out.println("ASSDASDASDA");
 			return ResponseEntity.ok("Company added");
 		} catch (Exception e) {
-			System.out.println("addCompany: " + e);
 			return ResponseEntity.internalServerError().body("Error in restcontroller in adding company");
 		}
 	}
