@@ -29,11 +29,10 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 public class FirestoreService {
 	
 	//Adding Company object to firebase
-	public static void addObject(Company company) {
+	public static void addObject(Company company, String collection) {
 		try {
-			System.out.println("Company: " + company.getBusinessId());
 			Firestore db = FirebaseConfig.InitializeDatabase();
-			DocumentReference docRef = db.collection("Company").document(company.getBusinessId());
+			DocumentReference docRef = db.collection(collection).document(company.getBusinessId());
 		
 		
 			Map<String, Object> data = new HashMap<>();
@@ -151,5 +150,20 @@ public class FirestoreService {
 		
 	}
 
+	public String getInfo() {
+		String string = "";
+        try {
+            Firestore db = FirebaseConfig.InitializeDatabase();
+            
+            // Ensure the collection name is correct
+            DocumentSnapshot doc = db.collection("Info").document("Info").get().get();
+            String info = doc.getString("info");
+            return string = info;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return string;
+    }
 
 }

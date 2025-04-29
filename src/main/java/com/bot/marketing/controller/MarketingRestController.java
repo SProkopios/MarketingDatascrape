@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,9 @@ public class MarketingRestController {
 	@GetMapping(value="/wakeServer")
 	public ResponseEntity<Object> wakeServer() {
 		HashMap<String, String> response = new HashMap<>();
-		response.put("Message","We are live");
+		FirestoreService info = new FirestoreService();
+		String databaseInfo = info.getInfo();
+		response.put("Info", databaseInfo);
 		return ResponseEntity.ok(response);
 	}
 	
@@ -107,9 +110,24 @@ public class MarketingRestController {
 	public ResponseEntity<String> addCompany(@RequestBody Company company) {
 		
 		try {
-			System.out.println("Company Restapi: " + company.getBusinessId());
+			String collection = "Company";
 			// Save the Company object to the database
-			FirestoreService.addObject(company);
+			FirestoreService.addObject(company, collection);
+			return ResponseEntity.ok("Company added");
+		} catch (Exception e) {
+			System.out.println("addCompany: " + e);
+			return ResponseEntity.internalServerError().body("Error in restcontroller in adding company");
+		}
+	}
+	
+	@PostMapping(value="/addEmail", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<String> addEmail(@RequestBody Company company) {
+		
+		try {
+			String collection  = "Mylist";
+			// Save the Company object to the database
+			FirestoreService.addObject(company, collection);
+			System.out.println("ASSDASDASDA");
 			return ResponseEntity.ok("Company added");
 		} catch (Exception e) {
 			System.out.println("addCompany: " + e);
