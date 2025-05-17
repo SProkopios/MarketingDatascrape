@@ -19,25 +19,16 @@ import com.google.firebase.cloud.FirestoreClient;
 
 @Configuration
 public class FirebaseConfig {
-
-	
-	//Database
 	private static Firestore db;
-	
 	private static String path = System.getenv("Firebase");
 	
 	//As the name suggests, initializing the database
 	public static Firestore InitializeDatabase(){
 
-		
-
-		//If it has been initialized once, just returning the current one
 		if (db != null) {
 			return db;
 		}
 		
-		
-		//If not, initialize it here
 		try {
 			FileInputStream serviceAccount = new FileInputStream(path);
 			GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
@@ -46,15 +37,11 @@ public class FirebaseConfig {
                  .setCredentials(credentials)
                  .build();
 			FirebaseApp.initializeApp(options);
-
-			// You can now obtain Firestore instance as needed
 			db = FirestoreClient.getFirestore();
 		} catch (IOException e) {
 			System.out.println("Error in firebaseCOnfig: ");
 			e.printStackTrace();
-			System.out.println("PATH: " + path);
 		}
-		System.out.println("This is db: " + db);
 		return db;
 	}
 }

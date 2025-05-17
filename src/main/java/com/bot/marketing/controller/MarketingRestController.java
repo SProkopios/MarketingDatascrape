@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.context.annotation.Bean;
@@ -19,12 +20,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.bot.marketing.domain.Company;
 import com.bot.marketing.domain.DataHandling;
+import com.bot.marketing.service.DataScrape;
 import com.bot.marketing.service.FirestoreService;
 import com.bot.marketing.service.URLCall;
 import com.bot.marketing.domain.CompanySearchRequest;
@@ -43,9 +46,19 @@ public class MarketingRestController {
 	public ResponseEntity<Object> wakeServer() {
 		HashMap<String, String> response = new HashMap<>();
 		FirestoreService info = new FirestoreService();
-		String databaseInfo = info.getInfo();
-		response.put("Info", databaseInfo);
+		response = (HashMap<String, String>) info.getInfo();
+		//response.put("Info", databaseInfo);
 		return ResponseEntity.ok(response);
+	}
+	
+	@PostMapping(value="/findemail")
+	public ResponseEntity<Object> findEmail(@RequestBody Company company) {
+		try {
+			Company scrapedCompany = DataScrape.Scrape(company);
+			return ResponseEntity.ok().body(scrapedCompany);
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
 	}
 	
 	
@@ -83,11 +96,13 @@ public class MarketingRestController {
 				con.disconnect();
 				}
 			} else {
-				System.out.println("RestController: Missing parameter");
+				HashMap<String, Object> response = new HashMap<>();
+		        response.put("message", "Missing parameter");
+		        response.put("success", false);
+				return ResponseEntity.ok(response);
 			}
 				
 		} catch(Exception e) {
-			System.out.println("RestController apicall: " + e);
 			return ResponseEntity.internalServerError().build();
 		}
 		return ResponseEntity.ok().body(companies);
@@ -95,9 +110,9 @@ public class MarketingRestController {
 
 		
 	@GetMapping(value="/getCompanies")
-	public ResponseEntity<List<Company>> companylist() {
+	public ResponseEntity<List<Company>> getCompanies(@RequestParam(required = false) String cursor) {
 		try {
-			List<Company> companies = FirestoreService.getAll();
+			List<Company> companies = FirestoreService.getAll(cursor);
 			return ResponseEntity.ok(companies);
 
 		} catch (Exception e) {

@@ -36,13 +36,14 @@ public class DataScrape {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				List<String> companyNames = company.getName();
-				String word = companyNames.get(0);
+				String word = companyNames.get(0); 
 
-				int sleepTime = ThreadLocalRandom.current().nextInt(4000, 9001);
-				Thread.sleep(sleepTime);
+				//int sleepTime = ThreadLocalRandom.current().nextInt(4000, 9001);
+				//Thread.sleep(sleepTime);
 					
 				String searchword = URLEncoder.encode(word, StandardCharsets.UTF_8.toString());					
 				String finalUrl = Url + searchword + UrlEnd;
+				
 				Document doc = Jsoup.connect(finalUrl)
 						.timeout(4000)
 						.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
@@ -54,14 +55,11 @@ public class DataScrape {
 						.get();
 				
 				if(doc.childNodes().size() == 2) {
-					
 					company.setSource(company.getSource() + ", " + dataSource);
 					Element element = doc.select(firstElement).first();
-					
 					String jsonData = element.data();
 					
 					if (!jsonData.isEmpty()) {
-							
 						JsonNode node = mapper.readTree(jsonData);
 						JsonNode data = node.at(jsonPath);
 						
@@ -80,7 +78,6 @@ public class DataScrape {
 				} catch(Exception e) {
 					System.out.println("DataScrape: " + e);
 				}
-		
 			return company;
 		}
 	
@@ -90,18 +87,15 @@ public class DataScrape {
 	public static Company isValidCompany(JsonNode results, Company company) {	
 		try {
 			for (JsonNode e : results) {
-				
 				Boolean emailPresent = e.get(emailIsPresent).asBoolean();
 
 				if (emailPresent && company.getEmail().isEmpty()) {
-					
 					String companyId = e.get(idElement).asText();
 					companyId = refactorString(companyId);
 					String nameElementti = e.get(nameElement).asText();
 					company = getCorrectName(nameElementti, company);
-
+					
 					if (companyId.equals(company.getBusinessId())) {
-						
 						String email  = e.get(emailElement).asText();
 						company.setEmail(email);
 						break;
@@ -109,7 +103,6 @@ public class DataScrape {
 					} else {
 						company.setLink(null);
 					}
-			
 				} else {
 					company.setLink(null);
 				}

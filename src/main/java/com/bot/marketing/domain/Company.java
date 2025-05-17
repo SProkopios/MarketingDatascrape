@@ -1,6 +1,6 @@
 package com.bot.marketing.domain;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,21 +13,22 @@ public class Company {
 	private String source;
 	private String email;
 	private String link;
-	private String personName;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	private Date send;
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	private Instant createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	private Instant send;
 	private boolean operational;
 	private String area;
 	
 
-	public Company(String businessId, List<String> name, String source, String email, String link, String personName, Date send, boolean operational, String area) {
+	public Company(String businessId, List<String> name, String source, String email, String link, Instant createdAt, Instant send, boolean operational, String area) {
 		super();
 		this.businessId = businessId;
 		this.name = name;
 		this.source = source;
 		this.email = email;
 		this.link = link;
-		this.personName = personName;
+		this.createdAt = createdAt;
 		this.send = send;
 		this.operational = operational;
 		this.area = area;
@@ -75,19 +76,19 @@ public class Company {
 		this.link = link;
 	}
 	
-	public String getPersonName() {
-		return personName;
+	public Instant getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setPersonName(String personName) {
-		this.personName = personName;
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public Date isSend() {
+	public Instant isSend() {
 		return send;
 	}
 
-	public void setSend(Date send) {
+	public void setSend(Instant send) {
 		this.send = send;
 	}
 
@@ -116,7 +117,7 @@ public class Company {
 	            ", source='" + source + '\'' +
 	            ", email='" + email + '\'' +
 	            ", link='" + link + '\'' +
-	            ", personName='" + personName + '\'' +
+	            ", createdAt='" + createdAt + '\'' +
 	            ", send='" + send + '\'' +
 	            ", operational='" + operational + '\'' +
 	            ", area='" + area + '\'' +

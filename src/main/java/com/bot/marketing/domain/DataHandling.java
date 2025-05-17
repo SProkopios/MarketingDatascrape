@@ -57,16 +57,13 @@ public class DataHandling {
 						c1.setSource("Avoindata API");
 						c1.setLink("");
 						c1.setEmail("");
-						
-						c1.setPersonName("");
+						c1.setCreatedAt(null);
 						c1.setSend(null);
-						
 						c1.setOperational(true);
 						c1.setArea(area);
-						
 						c1.setName(companyNames);
 						
-						c1 = DataScrape.Scrape(c1);
+						//c1 = DataScrape.Scrape(c1);
 						
 						
 						companies.add(c1);

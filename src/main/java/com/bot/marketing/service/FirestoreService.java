@@ -7,20 +7,20 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bot.marketing.config.FirebaseConfig;
 import com.bot.marketing.domain.Company;
 import com.bot.marketing.domain.User;
-import com.fasterxml.jackson.databind.ser.std.UUIDSerializer;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
-import com.google.firebase.cloud.FirestoreClient;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.Query.Direction;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 
 
@@ -42,7 +42,7 @@ public class FirestoreService {
 			data.put("link", company.getLink());
 			data.put("name", company.getName());
 			data.put("operational", company.isOperational());
-			data.put("personName", company.getPersonName());
+			data.put("createdAt", company.getCreatedAt());
 			data.put("send", company.isSend());
 			data.put("source", company.getSource());
 		
@@ -56,21 +56,27 @@ public class FirestoreService {
 	
 	
 	//Returning every company from database
-	public static List<Company> getAll() {
-		
+	public static List<Company> getAll(@RequestParam(required = false) String cursor) {
 		List<Company> companies = new ArrayList<>();
+		Firestore db = FirebaseConfig.InitializeDatabase();
 		try {
-			Firestore db = FirebaseConfig.InitializeDatabase();
-			ApiFuture<QuerySnapshot> query = db.collection("Company").get();
-		
-			QuerySnapshot querySnapshot = query.get();
+			CollectionReference companiesRef = db.collection("Mylist");
+			Query query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2);
+
+			//If not the first api call
+			if (cursor != null && !cursor.isEmpty()) {
+				Timestamp cursorTimestamp = Timestamp.parseTimestamp(cursor);
+				query = query.startAfter(cursorTimestamp);
+			}
 			
-			//I have no idea how to use ApiFuture so lets change that to list
-		    List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-		    for (QueryDocumentSnapshot document : documents) {
-		        Company company = document.toObject(Company.class);
-		        companies.add(company);
-		    }
+		    ApiFuture<QuerySnapshot> future = query.get();
+		    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+			    
+		    for (QueryDocumentSnapshot doc : documents) {
+		    	Company company = doc.toObject(Company.class);
+		    	companies.add(company);
+		    	}
+		    
 		} catch (Exception e) {
 			System.out.println("FirestoreService.getAll: " + e);
 		}
@@ -78,9 +84,9 @@ public class FirestoreService {
 	}
 	
 	
+	
 	//Returning Company 
 	public static Optional<Company> getCompanyById(String id) {
-		
 		Optional<Company> optionalCompany = Optional.empty();
 		
 		try {
@@ -116,7 +122,6 @@ public class FirestoreService {
 	//Verifying username and password
 	public static Boolean verifyUser(User user) {
 		
-		
 		//making a query to database
 		Firestore db = FirebaseConfig.InitializeDatabase();
 		CollectionReference User = db.collection("Users");
@@ -125,20 +130,16 @@ public class FirestoreService {
 		// Asynchronously retrieve multiple documents
 		ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-		
 		// Get the list of documents returned by the query
 		try {
-			
 			QuerySnapshot snapshot = querySnapshot.get();
 		
 			if (! snapshot.isEmpty()) {
-				
 				DocumentSnapshot document = snapshot.getDocuments().get(0);
 
 				//Getting the fields from database
 				String dbPassword = document.getString("password");
 
-				
 				if(dbPassword.equals(user.getPassword())) {
 					return true;
 				}
@@ -146,24 +147,24 @@ public class FirestoreService {
 		}catch(Exception e) {
 			System.out.println("verifyUser: " + e);
 		}
-		return false;
-		
+		return false;	
 	}
 
-	public String getInfo() {
-		String string = "";
+	public Map<String, String> getInfo() {
+		HashMap<String, String> retInfo = new HashMap<>();
         try {
-            Firestore db = FirebaseConfig.InitializeDatabase();
-            
-            // Ensure the collection name is correct
-            DocumentSnapshot doc = db.collection("Info").document("Info").get().get();
-            String info = doc.getString("info");
-            return string = info;
-            
+            Firestore db = FirebaseConfig.InitializeDatabase();            
+			CollectionReference infoRef = db.collection("Info");
+			ApiFuture<QuerySnapshot> future = infoRef.get();
+		    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+		    
+		    for (QueryDocumentSnapshot doc : documents) {
+		    	retInfo.put("info", doc.get("info").toString());
+		    	retInfo.put("info2", doc.get("info2").toString());
+		    }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return string;
+        return retInfo;
     }
-
 }
