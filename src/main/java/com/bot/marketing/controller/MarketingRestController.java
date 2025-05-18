@@ -4,18 +4,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +20,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.bot.marketing.domain.Company;
 import com.bot.marketing.domain.DataHandling;
-import com.bot.marketing.domain.Filter;
 import com.bot.marketing.service.DataScrape;
 import com.bot.marketing.service.FirestoreService;
 import com.bot.marketing.service.URLCall;
@@ -122,12 +114,10 @@ public class MarketingRestController {
 	}
 	
 	@PostMapping(value="/getCompaniesFrom")
-	public ResponseEntity<List<Company>> getCompaniesFrom(@RequestBody Filter filter) {
+	public ResponseEntity<List<Company>> getCompaniesFrom(@RequestBody CompanySearchRequest filter) {
 		try {
-			System.out.println("ALUE: " + filter.getArea() + " " + "Toimiala: " + filter.getIndustry());
 			FirestoreService fs = new FirestoreService();
-			List<Company> companies = fs.getAllWithFilter(filter.getArea(), filter.getIndustry());
-			System.out.println("Controller palauttaa tän: " + companies);
+			List<Company> companies = fs.getAllWithFilter(filter.getArea(), filter.getCategoryText());
 			return ResponseEntity.ok(companies);
 
 		} catch (Exception e) {
