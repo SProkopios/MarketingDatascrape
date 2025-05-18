@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.bot.marketing.domain.Company;
 import com.bot.marketing.domain.DataHandling;
+import com.bot.marketing.domain.Filter;
 import com.bot.marketing.service.DataScrape;
 import com.bot.marketing.service.FirestoreService;
 import com.bot.marketing.service.URLCall;
@@ -110,9 +111,23 @@ public class MarketingRestController {
 
 		
 	@GetMapping(value="/getCompanies")
-	public ResponseEntity<List<Company>> getCompanies(@RequestParam(required = false) String cursor) {
+	public ResponseEntity<List<Company>> getCompanies(@RequestParam(required = false) String cursor, @RequestParam(required = false) String area, @RequestParam(required = false) String industry) {
 		try {
-			List<Company> companies = FirestoreService.getAll(cursor);
+			List<Company> companies = FirestoreService.getAll(cursor, area, industry);
+			return ResponseEntity.ok(companies);
+
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+	
+	@PostMapping(value="/getCompaniesFrom")
+	public ResponseEntity<List<Company>> getCompaniesFrom(@RequestBody Filter filter) {
+		try {
+			System.out.println("ALUE: " + filter.getArea() + " " + "Toimiala: " + filter.getIndustry());
+			FirestoreService fs = new FirestoreService();
+			List<Company> companies = fs.getAllWithFilter(filter.getArea(), filter.getIndustry());
+			System.out.println("Controller palauttaa tän: " + companies);
 			return ResponseEntity.ok(companies);
 
 		} catch (Exception e) {

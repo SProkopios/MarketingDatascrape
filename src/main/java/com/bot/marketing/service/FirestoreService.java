@@ -56,12 +56,18 @@ public class FirestoreService {
 	
 	
 	//Returning every company from database
-	public static List<Company> getAll(@RequestParam(required = false) String cursor) {
+	//TODO query class for firebase querys(?)
+	public static List<Company> getAll(@RequestParam(required = false) String cursor, @RequestParam(required = false) String area, @RequestParam(required = false) String industry) {
 		List<Company> companies = new ArrayList<>();
 		Firestore db = FirebaseConfig.InitializeDatabase();
+		CollectionReference companiesRef = db.collection("Mylist");
+		Query query;
 		try {
-			CollectionReference companiesRef = db.collection("Mylist");
-			Query query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2);
+			if (area.isEmpty() && industry.isEmpty()) {
+				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2);
+			} else {
+				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2).whereEqualTo("area", area);
+			}
 
 			//If not the first api call
 			if (cursor != null && !cursor.isEmpty()) {
@@ -83,6 +89,30 @@ public class FirestoreService {
 		return companies;
 	}
 	
+	public List<Company> getAllWithFilter(@RequestParam(required = false) String area, @RequestParam(required = false) String industry) {
+		List<Company> companies = new ArrayList<>();
+		Firestore db = FirebaseConfig.InitializeDatabase();
+		CollectionReference companiesRef = db.collection("Mylist");
+		Query query;
+		try {
+			if (area.isEmpty() && industry.isEmpty()) {
+				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2);
+			} else {
+				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2).whereEqualTo("area", area);
+			}
+		    ApiFuture<QuerySnapshot> future = query.get();
+		    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+			    
+		    for (QueryDocumentSnapshot doc : documents) {
+		    	Company company = doc.toObject(Company.class);
+		    	companies.add(company);
+		    	}
+		} catch (Exception e) {
+			System.out.println("FirestoreService.getAllWithFilter: ");
+			e.printStackTrace();
+		}
+		return companies;
+	}
 	
 	
 	//Returning Company 
