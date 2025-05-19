@@ -63,7 +63,7 @@ public class FirestoreService {
 		CollectionReference companiesRef = db.collection("Mylist");
 		Query query;
 		try {
-			if (area.isEmpty() | area == null && industry.isEmpty() | industry == null) {
+			if (area == null || area.isEmpty() && industry == null || industry.isEmpty()) {
 				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2);
 			} else {
 				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2).whereEqualTo("area", area);
