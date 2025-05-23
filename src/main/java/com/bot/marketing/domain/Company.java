@@ -19,9 +19,10 @@ public class Company {
 	private Instant send;
 	private boolean operational;
 	private String area;
+	private String industry;
 	
 
-	public Company(String businessId, List<String> name, String source, String email, String link, Instant createdAt, Instant send, boolean operational, String area) {
+	public Company(String businessId, List<String> name, String source, String email, String link, Instant createdAt, Instant send, boolean operational, String area, String industry) {
 		super();
 		this.businessId = businessId;
 		this.name = name;
@@ -32,6 +33,7 @@ public class Company {
 		this.send = send;
 		this.operational = operational;
 		this.area = area;
+		this.industry = industry;
 	}
 	
 	public Company () {};
@@ -108,6 +110,14 @@ public class Company {
 		this.area = area;
 	}
 	
+	public String getIndustry() {
+		return industry;
+	}
+	
+	public void setIndustry(String industry) {
+		this.industry = industry;
+	}
+	
 	
 	@Override
 	public String toString() {
@@ -121,6 +131,7 @@ public class Company {
 	            ", send='" + send + '\'' +
 	            ", operational='" + operational + '\'' +
 	            ", area='" + area + '\'' +
+	            ", industry='" + industry + '\'' +
 	            '}';
 	}
 }

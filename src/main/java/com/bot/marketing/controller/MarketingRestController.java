@@ -117,7 +117,7 @@ public class MarketingRestController {
 	public ResponseEntity<List<Company>> getCompaniesFrom(@RequestBody CompanySearchRequest filter) {
 		try {
 			FirestoreService fs = new FirestoreService();
-			List<Company> companies = fs.getAllWithFilter(filter.getArea(), filter.getCategoryText());
+			List<Company> companies = fs.getAllWithFilter(filter);
 			return ResponseEntity.ok(companies);
 
 		} catch (Exception e) {

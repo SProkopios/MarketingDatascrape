@@ -62,6 +62,7 @@ public class DataHandling {
 						c1.setOperational(true);
 						c1.setArea(area);
 						c1.setName(companyNames);
+						c1.setIndustry(data);
 						
 						//c1 = DataScrape.Scrape(c1);
 						

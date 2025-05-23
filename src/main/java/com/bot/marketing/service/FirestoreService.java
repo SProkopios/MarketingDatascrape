@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bot.marketing.config.FirebaseConfig;
 import com.bot.marketing.domain.Company;
+import com.bot.marketing.domain.CompanySearchRequest;
 import com.bot.marketing.domain.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
@@ -89,7 +90,9 @@ public class FirestoreService {
 		return companies;
 	}
 	
-	public List<Company> getAllWithFilter(@RequestParam(required = false) String area, @RequestParam(required = false) String industry) {
+	public List<Company> getAllWithFilter(CompanySearchRequest filter) {
+		String area = filter.getArea();
+		String industry = filter.getCategoryText();
 		List<Company> companies = new ArrayList<>();
 		Firestore db = FirebaseConfig.InitializeDatabase();
 		CollectionReference companiesRef = db.collection("Mylist");
@@ -97,8 +100,10 @@ public class FirestoreService {
 		try {
 			if (area.isEmpty() && industry.isEmpty()) {
 				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2);
-			} else {
+			} else if (!area.isEmpty()){
 				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2).whereEqualTo("area", area);
+			} else {
+				query = companiesRef.orderBy("createdAt", Direction.DESCENDING).limit(2).whereEqualTo("industry", industry);
 			}
 		    ApiFuture<QuerySnapshot> future = query.get();
 		    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
