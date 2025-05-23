@@ -17,7 +17,7 @@ public class DataHandling {
 
 	List<Company> companies = new ArrayList<>();
     
-    public List<Company> AvoinData(String data, String area) {
+    public List<Company> AvoinData(String data, String area, String inputText) {
 		try {
 			// Parse the JSON response
 			JSONObject jsonObject = new JSONObject(data);
@@ -62,7 +62,7 @@ public class DataHandling {
 						c1.setOperational(true);
 						c1.setArea(area);
 						c1.setName(companyNames);
-						c1.setIndustry(data);
+						c1.setIndustry(inputText);
 						
 						//c1 = DataScrape.Scrape(c1);
 						

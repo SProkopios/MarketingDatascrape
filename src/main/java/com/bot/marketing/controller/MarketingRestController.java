@@ -57,34 +57,23 @@ public class MarketingRestController {
 	
 	@PostMapping(value="/apicall")
 	public ResponseEntity<Object> apicall(@RequestBody CompanySearchRequest body) {
-		
 		List<Company> companies = new ArrayList<>();
-		
 		String inputText = body.getCategoryText();
 		String area = body.getArea();
 		
-		
 		try {
 			if (!inputText.isEmpty() && !area.isEmpty()) {
-			//Creating a stringbuilder and calling avoindata from URLCall to make API call
-			StringBuilder result = new StringBuilder();
-			HttpURLConnection con = URLCall.avoindata(inputText, area);
+				StringBuilder result = new StringBuilder();
+				HttpURLConnection con = URLCall.avoindata(inputText, area);
 			
-				//Converting response from bytes to string
 				try (BufferedReader reader = new BufferedReader(
 						new InputStreamReader(con.getInputStream()))) {
 					
-					// Loop to read every line 
 					for (String line; (line = reader.readLine()) != null; ) {
 						result.append(line);
-						
-						
-						// Calling datahandling
 						DataHandling dataHandling = new DataHandling();
-						companies = dataHandling.AvoinData(result.toString(), area);
-							
+						companies = dataHandling.AvoinData(result.toString(), area, inputText);
 					}
-					
 				//Closing the connection
 				con.disconnect();
 				}
