@@ -43,6 +43,7 @@ public class DataScrape {
 					
 				String searchword = URLEncoder.encode(word, StandardCharsets.UTF_8.toString());					
 				String finalUrl = Url + searchword + UrlEnd;
+				System.out.println("final: " + finalUrl);
 				
 				Document doc = Jsoup.connect(finalUrl)
 						.timeout(4000)
@@ -55,9 +56,12 @@ public class DataScrape {
 						.get();
 				
 				if(doc.childNodes().size() == 2) {
+
 					company.setSource(company.getSource() + ", " + dataSource);
 					Element element = doc.select(firstElement).first();
 					String jsonData = element.data();
+
+					System.out.println("jsonData: " + jsonData);
 					
 					if (!jsonData.isEmpty()) {
 						JsonNode node = mapper.readTree(jsonData);
@@ -87,6 +91,8 @@ public class DataScrape {
 	public static Company isValidCompany(JsonNode results, Company company) {	
 		try {
 			for (JsonNode e : results) {
+
+				System.out.println("email present: " + e.get(emailIsPresent);
 				Boolean emailPresent = e.get(emailIsPresent).asBoolean();
 
 				if (emailPresent && company.getEmail().isEmpty()) {
