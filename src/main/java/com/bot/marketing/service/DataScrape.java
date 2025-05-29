@@ -92,7 +92,7 @@ public class DataScrape {
 		try {
 			for (JsonNode e : results) {
 
-				System.out.prinln("e: " + e);
+				System.out.println("e: " + e);
 
 				System.out.println("email present: " + e.get(emailIsPresent));
 				System.out.println("address is present: " + e.get("hasAddress"));
