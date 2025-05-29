@@ -93,6 +93,7 @@ public class DataScrape {
 			for (JsonNode e : results) {
 
 				System.out.println("email present: " + e.get(emailIsPresent));
+				System.out.println("address is present: " + e.get("hasAddress"));
 				System.out.println(emailIsPresent);
 				Boolean emailPresent = e.get(emailIsPresent).asBoolean();
 
