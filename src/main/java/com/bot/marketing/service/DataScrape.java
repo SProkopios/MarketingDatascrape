@@ -96,7 +96,7 @@ public class DataScrape {
 				System.out.println(emailIsPresent);
 				Boolean emailPresent = e.get(emailIsPresent).asBoolean();
 
-				if (emailPresent && company.getEmail().isEmpty()) {
+				if (company.getEmail().isEmpty()) {
 					String companyId = e.get(idElement).asText();
 					companyId = refactorString(companyId);
 					String nameElementti = e.get(nameElement).asText();
