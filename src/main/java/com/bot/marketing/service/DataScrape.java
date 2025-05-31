@@ -33,14 +33,10 @@ public class DataScrape {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				List<String> companyNames = company.getName();
-				String word = companyNames.get(0); 
-
-				//int sleepTime = ThreadLocalRandom.current().nextInt(4000, 9001);
-				//Thread.sleep(sleepTime);
-					
-				String searchword = URLEncoder.encode(word, StandardCharsets.UTF_8.toString());					
-				String finalUrl = Url + searchword + UrlEnd;
+				String word = companyNames.get(0);
 				
+				String searchword = URLEncoder.encode(word, StandardCharsets.UTF_8.toString());
+				String finalUrl = Url + searchword + UrlEnd;
 				Document doc = Jsoup.connect(finalUrl)
 					.timeout(4000)
 					.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
@@ -55,32 +51,33 @@ public class DataScrape {
 					company.setSource(company.getSource() + ", " + dataSource);
 					Element element = doc.select(firstElement).first();
 					String jsonData = element.data();
-					
 					if (!jsonData.isEmpty()) {
 						JsonNode node = mapper.readTree(jsonData);
 						JsonNode data = node.at(jsonPath);
+						
 						int otherSleepyTime = ThreadLocalRandom.current().nextInt(6000, 14001);
 						
 						Thread.sleep(otherSleepyTime);
 						company.setLink(finalUrl);
 						company = isValidCompany(data, company);
+						} else {
+							System.out.println("No element found in Scrape!");
+							}
 					} else {
-						System.out.println("No element found in Scrape!");
-					}
-				} else {
-					System.out.println("HAve to figure out some smart else statement later!");
-				}
+						System.out.println("HAve to figure out some smart else statement later!");
+						}
 				} catch(Exception e) {
 					System.out.println("DataScrape: " + e);
-				}
+					}
 			return company;
-		}
-	
-	public static Company isValidCompany(JsonNode results, Company company) {	
+			}
+
+	public static Company isValidCompany(JsonNode results, Company company) {
 		try {
 			for (JsonNode e : results) {
 				Boolean emailPresent = e.get(emailIsPresent).asBoolean();
-				if (company.getEmail().isEmpty()) {
+
+				if (emailPresent && company.getEmail().isEmpty()) {
 					String companyId = e.get(idElement).asText();
 					companyId = refactorString(companyId);
 					String nameElementti = e.get(nameElement).asText();
@@ -92,17 +89,17 @@ public class DataScrape {
 						break;
 					} else {
 						company.setLink(null);
-					}
-				} else {
-					company.setLink(null);
+						}
+					} else {
+						company.setLink(null);
+						}
 				}
-			} 	
 			}catch(Exception e) {
 				System.out.println("isValidCompany: " + e);
-			}
+				}
 		return company;
-	}
-		
+		}
+
 	public static Company getCorrectName(String Name, Company company) {
 		List<String> companyNames = company.getName();
 		for (String c : companyNames) {
@@ -111,8 +108,8 @@ public class DataScrape {
 				companyNames.add(Name);
 				company.setName(companyNames);
 				break;
+				}
 			}
-		}
 		return company;
 	}
 	

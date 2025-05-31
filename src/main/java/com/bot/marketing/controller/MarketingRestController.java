@@ -48,6 +48,9 @@ public class MarketingRestController {
 	public ResponseEntity<Object> findEmail(@RequestBody Company company) {
 		try {
 			Company scrapedCompany = DataScrape.Scrape(company);
+			if (!company.getEmail().isEmpty()) {
+				FirestoreService.addObject(scrapedCompany, "Mylist");
+			}
 			return ResponseEntity.ok().body(scrapedCompany);
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
