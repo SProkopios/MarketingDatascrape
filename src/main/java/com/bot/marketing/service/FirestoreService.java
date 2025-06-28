@@ -18,6 +18,7 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Query;
@@ -55,10 +56,26 @@ public class FirestoreService {
 		}
 	}
 	
+	public static Boolean deleteObject(Company company) {
+		Firestore db = FirebaseConfig.InitializeDatabase();
+		try {
+			if(getCompanyById(company.getBusinessId()).isPresent()) {
+				ApiFuture<WriteResult> future = db.collection("Mylist").document(company.getBusinessId()).delete();
+				WriteResult result = future.get();
+				return true;
+			}else {
+				return false;
+			}
+		} catch(Exception e) {
+			System.out.println("FirestoreService.deleteObject: " + e);
+			return false;
+		}	
+	}
+	
 	
 	//Returning every company from database
 	//TODO query class for firebase querys(?)
-	public static List<Company> getAll(@RequestParam(required = false) String cursor, @RequestParam(required = false) String area, @RequestParam(required = false) String industry) {
+	public static List<Company> getAll(String cursor,String area,String industry) {
 		List<Company> companies = new ArrayList<>();
 		Firestore db = FirebaseConfig.InitializeDatabase();
 		CollectionReference companiesRef = db.collection("Mylist");
@@ -125,11 +142,9 @@ public class FirestoreService {
 		Optional<Company> optionalCompany = Optional.empty();
 		
 		try {
-			
-			
 			//making a query to database
 			Firestore db = FirebaseConfig.InitializeDatabase();
-			CollectionReference companies = db.collection("Company");
+			CollectionReference companies = db.collection("Mylist");
 			Query query = companies.whereEqualTo("businessId", id);
 		
 			

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -131,6 +132,24 @@ public class MarketingRestController {
 		}
 	}
 	
+	@PostMapping(value="/deleteCompany", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<HashMap<String,Boolean>> deleteCompany(@RequestBody Company company) {
+		HashMap<String, Boolean> responseBody = new HashMap<>();
+		try {
+			Boolean response = FirestoreService.deleteObject(company);
+			if (response) {
+				responseBody.put("Deleted", response);
+				return ResponseEntity.ok(responseBody);
+			} else {
+				responseBody.put("Deleted", response);
+				return ResponseEntity.ok(responseBody);
+			}
+		} catch (Exception e) {
+			responseBody.put("Deleted", false);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+		}
+	}
+	
 	@PostMapping(value="/addEmail", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<String> addEmail(@RequestBody Company company) {
 		
@@ -148,19 +167,23 @@ public class MarketingRestController {
 	// Checking frontend credentials
 	@PostMapping(value="/checkinguser")
 	public ResponseEntity<HashMap<String,Object>> checkUser(@RequestBody User user) {
-		
 		HashMap<String, Object> response = new HashMap<>();
-		
-		if(FirestoreService.verifyUser(user)) {
-	        response.put("success", true);
-	        response.put("message", "Login successful");
-	        response.put("token", JWTokenService.createToken());
-			return ResponseEntity.ok(response);
-		} else {
-			//
-	        response.put("success", false);
-	        response.put("message", "Login failed");
-			return ResponseEntity.ok(response);
+		try {
+			
+			if(FirestoreService.verifyUser(user)) {
+		        response.put("success", true);
+		        response.put("message", "Login successful");
+		        response.put("token", JWTokenService.createToken());
+				return ResponseEntity.ok(response);
+			} else {
+				//
+		        response.put("success", false);
+		        response.put("message", "Login failed");
+				return ResponseEntity.ok(response);
+			}
+		} catch(Exception e) {
+			response.put("success", false);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
 	
